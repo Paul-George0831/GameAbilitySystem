@@ -15,10 +15,11 @@ class GAMEABILITYSYSTEM_API ADefaultPlayerController : public APlayerController
 public:
 	ADefaultPlayerController();
 
+	virtual void PlayerTick(float DeltaTime) override;
+
 protected:
 	virtual void BeginPlay() override;
 
-	
 	//设置增强输入组件
 	virtual void SetupInputComponent() override;
 
@@ -31,4 +32,11 @@ private:
 	//创建一个输入动作
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> MoveAction;
+
+	void CursorTrace();
+
+private:
+	TObjectPtr<class IHighlightInterface> LastHighLightedActor;
+
+	TObjectPtr<class IHighlightInterface> CurHighLightActor;
 };

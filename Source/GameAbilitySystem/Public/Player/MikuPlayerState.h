@@ -3,35 +3,30 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Interfaces/HighlightInterface.h"
 #include "AbilitySystemInterface.h"
-#include "Characters/BaseCharacter.h"
-#include "Enemy.generated.h"
+#include "GameFramework/PlayerState.h"
+#include "MikuPlayerState.generated.h"
 
 class UAbilitySystemComponent;
 class UAttributeSet;
 
 UCLASS()
-class GAMEABILITYSYSTEM_API AEnemy : public ABaseCharacter, public IHighlightInterface, public IAbilitySystemInterface
+class GAMEABILITYSYSTEM_API AMikuPlayerState : public APlayerState, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 	
 public:
-
-	AEnemy();
-
-	virtual void Highlight() override;
-	virtual void UnHighlight() override;
+	AMikuPlayerState();
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-
+	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 protected:
 
 	//创建能力组件
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	//创建属性集
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
 };

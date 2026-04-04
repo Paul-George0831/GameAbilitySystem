@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -8,6 +6,7 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class AWeapon;
 
 UCLASS()
 class GAMEABILITYSYSTEM_API APlayerCharacter : public ABaseCharacter
@@ -23,4 +22,5 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Vision")
 	UCameraComponent* Camera;
+
 };

@@ -1,4 +1,5 @@
 #include "Controller/DefaultPlayerController.h"
+#include "Interfaces/HighlightInterface.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 
@@ -6,6 +7,47 @@ ADefaultPlayerController::ADefaultPlayerController()
 {
 	//启用网络复制？
 	bReplicates = true;
+}
+
+void ADefaultPlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+	//每帧进行一次光标追踪
+
+	CursorTrace();
+}
+
+void ADefaultPlayerController::CursorTrace()
+{
+	FHitResult CursorHit;
+	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
+	if (!CursorHit.bBlockingHit) return;//射线没打到物体
+	
+	LastHighLightedActor = CurHighLightActor;
+	CurHighLightActor = Cast<IHighlightInterface>(CursorHit.GetActor());
+	if (CurHighLightActor == LastHighLightedActor) {
+		if (CurHighLightActor) {
+			CurHighLightActor->Highlight();
+
+		}
+	}
+	else {
+		if(CurHighLightActor) {
+			if (LastHighLightedActor) {//不相等，都有效
+				LastHighLightedActor->UnHighlight();
+				CurHighLightActor->Highlight();
+			}
+			else {
+
+				CurHighLightActor->Highlight();
+			}//当前有效，之前的无效
+		}
+		else {
+			if(LastHighLightedActor) {//当前无效，之前有效
+				LastHighLightedActor->UnHighlight();
+			}
+		}
+	}
 }
 
 void ADefaultPlayerController::BeginPlay()
@@ -55,4 +97,5 @@ void ADefaultPlayerController::Move(const FInputActionValue& Value)
 	}
 	
 }
+
 
