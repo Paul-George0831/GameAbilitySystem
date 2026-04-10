@@ -4,15 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Interfaces/HighlightInterface.h"
-#include "AbilitySystemInterface.h"
 #include "Characters/BaseCharacter.h"
 #include "Enemy.generated.h"
 
-class UAbilitySystemComponent;
-class UAttributeSet;
-
 UCLASS()
-class GAMEABILITYSYSTEM_API AEnemy : public ABaseCharacter, public IHighlightInterface, public IAbilitySystemInterface
+class GAMEABILITYSYSTEM_API AEnemy : public ABaseCharacter, public IHighlightInterface
 {
 	GENERATED_BODY()
 	
@@ -20,18 +16,9 @@ public:
 
 	AEnemy();
 
+	virtual void BeginPlay() override;
+
 	virtual void Highlight() override;
 	virtual void UnHighlight() override;
 
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-
-
-protected:
-
-	//创建能力组件
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
-	//创建属性集
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UAttributeSet> AttributeSet;
 };

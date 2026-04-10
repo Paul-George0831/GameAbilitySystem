@@ -23,10 +23,10 @@ public:
 
 protected:
 
-	//创建能力组件
+	
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
-	//创建属性集
+	
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
 };
