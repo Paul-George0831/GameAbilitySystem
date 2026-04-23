@@ -54,8 +54,10 @@ void ADefaultPlayerController::BeginPlay()
 	check(DefaultPlayerContext);
 	//创建增强输入本地子系统
 	UEnhancedInputLocalPlayerSubsystem* SubSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-	check(SubSystem);
-	SubSystem->AddMappingContext(DefaultPlayerContext, 0);
+	if (SubSystem)
+	{
+		SubSystem->AddMappingContext(DefaultPlayerContext, 0);
+	}
 	//显示鼠标光标
 	bShowMouseCursor = true;
 	//设置鼠标Icon

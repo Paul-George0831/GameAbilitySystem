@@ -6,6 +6,7 @@
 
 struct FInputActionValue;
 class UInputAction;
+class IHighlightInterface;
 
 UCLASS()
 class GAMEABILITYSYSTEM_API ADefaultPlayerController : public APlayerController
@@ -35,7 +36,7 @@ private:
 
 	void CursorTrace();
 
-	TObjectPtr<class IHighlightInterface> LastHighLightedActor;
+	TObjectPtr<IHighlightInterface> LastHighLightedActor;
 
-	TObjectPtr<class IHighlightInterface> CurHighLightActor;
+	TObjectPtr<IHighlightInterface> CurHighLightActor;
 };

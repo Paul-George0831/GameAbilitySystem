@@ -2,9 +2,11 @@
 
 #include "AbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Controller/DefaultPlayerController.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Player/MikuPlayerState.h"
+#include "UI/HUD/MikuHUD.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -43,10 +45,17 @@ void APlayerCharacter::OnRep_PlayerState()
 
 void APlayerCharacter::InitAbilityActorInfo()
 {
-	//记得设置gamemode的playerstate为创建的playerstate,否则如果plaerstate不是AMikustate类之外的类型，就会访问到空指针报错
-	AMikuPlayerState* MikuPlayerState = GetPlayerState<AMikuPlayerState>();
+	AMikuPlayerState* MikuPlayerState = GetPlayerState<AMikuPlayerState>();//先获取到一个APlayerState，然后强转为AMikuPlayerState
 	check(MikuPlayerState);
-	MikuPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(MikuPlayerState, this);
+	MikuPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(MikuPlayerState, this)//owner负责持久化数据，持有技能。AvatarActor负责角色位置，视觉表现
 	AbilitySystemComponent = MikuPlayerState->GetAbilitySystemComponent();
 	AttributeSet = MikuPlayerState->GetAttributeSet();
+	
+	if (ADefaultPlayerController* MikuPlayerController = Cast<ADefaultPlayerController>(GetController()))
+	{
+		if (AMikuHUD* MikuHUD = Cast<AMikuHUD>(MikuPlayerController->GetHUD()))
+		{
+			MikuHUD->InitOverlay(MikuPlayerController,MikuPlayerState,AbilitySystemComponent, AttributeSet);
+		}
+	}
 }
