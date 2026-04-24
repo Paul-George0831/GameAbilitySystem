@@ -47,13 +47,14 @@ void APlayerCharacter::InitAbilityActorInfo()
 {
 	AMikuPlayerState* MikuPlayerState = GetPlayerState<AMikuPlayerState>();//先获取到一个APlayerState，然后强转为AMikuPlayerState
 	check(MikuPlayerState);
-	MikuPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(MikuPlayerState, this)//owner负责持久化数据，持有技能。AvatarActor负责角色位置，视觉表现
+	MikuPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(MikuPlayerState, this);//owner负责持久化数据，持有技能。AvatarActor负责角色位置，视觉表现
 	AbilitySystemComponent = MikuPlayerState->GetAbilitySystemComponent();
 	AttributeSet = MikuPlayerState->GetAttributeSet();
 	
-	if (ADefaultPlayerController* MikuPlayerController = Cast<ADefaultPlayerController>(GetController()))
+	//这里不能用断言，由于客户端只存在一个控制器，但存在多个character，如果这里是断言，其他character如果执行这段代码，就一定拿不到控制器，那么游戏就会立马崩溃
+	if (ADefaultPlayerController* MikuPlayerController = GetController<ADefaultPlayerController>())
 	{
-		if (AMikuHUD* MikuHUD = Cast<AMikuHUD>(MikuPlayerController->GetHUD()))
+		if (AMikuHUD* MikuHUD = MikuPlayerController->GetHUD<AMikuHUD>())
 		{
 			MikuHUD->InitOverlay(MikuPlayerController,MikuPlayerState,AbilitySystemComponent, AttributeSet);
 		}

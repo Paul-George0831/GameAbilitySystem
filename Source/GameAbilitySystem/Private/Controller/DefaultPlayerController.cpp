@@ -54,6 +54,7 @@ void ADefaultPlayerController::BeginPlay()
 	check(DefaultPlayerContext);
 	//创建增强输入本地子系统
 	UEnhancedInputLocalPlayerSubsystem* SubSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
+	//这里getlocalplayer只在客户端返回有效的ULocalplayer，在服务器上返回nullptr,如果这里使用check(subsystem)就必然会崩溃
 	if (SubSystem)
 	{
 		SubSystem->AddMappingContext(DefaultPlayerContext, 0);

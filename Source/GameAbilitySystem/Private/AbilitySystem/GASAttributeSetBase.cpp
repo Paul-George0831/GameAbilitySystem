@@ -3,7 +3,12 @@
 
 UGASAttributeSetBase::UGASAttributeSetBase()
 {
-	InitHealth(100.f);
+	/*ATTRIBUTE_ACCESSORS自动生成
+	float GetHealth() const;
+	void SetHealth(float Val);
+	void InitHealth(float Val);
+	*/
+	InitHealth(20.f);
 	InitMaxHealth(100.f);
 	InitMana(50.f);
 	InitMaxMana(50.f);

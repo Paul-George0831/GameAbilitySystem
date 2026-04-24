@@ -41,6 +41,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetControllerParams(const FMikuWidgetControllerParams& params);
 	
+	virtual void BroadcastInitialValues();
+	
+	virtual void BindCallbacksToDependencies();
+	
 protected:
 	
 	UPROPERTY(BlueprintReadOnly, Category="WidgetController")

@@ -9,7 +9,7 @@ class UCameraComponent;
 class AWeapon;
 
 UCLASS()
-class GAMEABILITYSYSTEM_API APlayerCharacter : public ABaseCharacter
+class GAMEABILITYSYSTEM_API APlayerCharacter : public ABaseCharacter                
 {
 	GENERATED_BODY()
 	

@@ -10,3 +10,11 @@ void UMikuWidgetController::SetWidgetControllerParams(const FMikuWidgetControlle
 	_PlayerController = params._PlayerController;
 	_PlayerState = params._PlayerState;
 }
+
+void UMikuWidgetController::BroadcastInitialValues()
+{
+}
+
+void UMikuWidgetController::BindCallbacksToDependencies()
+{
+}

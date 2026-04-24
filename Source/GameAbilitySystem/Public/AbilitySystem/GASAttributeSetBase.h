@@ -18,7 +18,7 @@ class GAMEABILITYSYSTEM_API UGASAttributeSetBase : public UAttributeSet
 	
 public:
 	
-	UGASAttributeSetBase();
+	UGASAttributeSetBase();//auraattributeset
 	
 	ATTRIBUTE_ACCESSORS(UGASAttributeSetBase, Health)
 	ATTRIBUTE_ACCESSORS(UGASAttributeSetBase, MaxHealth)

@@ -15,6 +15,7 @@ UOverlayWidgetController* AMikuHUD::GetOverlayWidgetController(const FMikuWidget
 		OverlayWidgetController = NewObject<UOverlayWidgetController>(this, OverlayWidgetControllerClass); //依赖倒置，如果OverlayWidgetController需要蓝图写一些额外逻辑，如果不使用OverlayWidgetControllerClass就无法让c++得知蓝图的逻辑
 		//outer父级对象，设计GC系统；class要创建对象的类型；
 		OverlayWidgetController->SetWidgetControllerParams(params);
+		OverlayWidgetController->BindCallbacksToDependencies();//一旦创建好了OverlayWidgetController,就应该绑定回调函数
 	}
 	return OverlayWidgetController;
 }
@@ -34,5 +35,7 @@ void AMikuHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySyst
 	UOverlayWidgetController* OverlayController = GetOverlayWidgetController(params);
 	
 	OverlayUserWidget->SetWidgetController(OverlayController);
+	OverlayController->BroadcastInitialValues();
+	
 	OverlayUserWidget->AddToViewport();
 }
