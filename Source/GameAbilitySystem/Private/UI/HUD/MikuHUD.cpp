@@ -7,7 +7,7 @@
 #include "UI/Controller/OverlayWidgetController.h"
 #include "Blueprint/UserWidget.h"
 
-UOverlayWidgetController* AMikuHUD::GetOverlayWidgetController(const FMikuWidgetControllerParams& params)
+UOverlayWidgetController* AMikuHUD::GetOverlayWidgetController(const FMikuWidgetControllerParams& params)//初始化overlaywidgetcontroller和获取都写在这里面了
 {
 	//如果OverlayWidgetController为空，直接创建一个OverlayWidgetController
 	if (OverlayWidgetController == nullptr)
@@ -35,7 +35,7 @@ void AMikuHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySyst
 	UOverlayWidgetController* OverlayController = GetOverlayWidgetController(params);
 	
 	OverlayUserWidget->SetWidgetController(OverlayController);
-	OverlayController->BroadcastInitialValues();
+	OverlayController->BroadcastInitialValues();//在GetOverlayWidgetController就已经初始化类内overlaywidgetcontroller了，这里无需继续赋值overlaywidgetcontroller
 	
 	OverlayUserWidget->AddToViewport();
 }
