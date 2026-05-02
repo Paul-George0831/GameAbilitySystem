@@ -1,6 +1,7 @@
 #include "Characters/PlayerCharacter.h"
 
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/GASAbilitySystemComponentBase.h"
 #include "Camera/CameraComponent.h"
 #include "Controller/DefaultPlayerController.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -47,8 +48,11 @@ void APlayerCharacter::InitAbilityActorInfo()
 {
 	AMikuPlayerState* MikuPlayerState = GetPlayerState<AMikuPlayerState>();//先获取到一个APlayerState，然后强转为AMikuPlayerState
 	check(MikuPlayerState);
+	check(MikuPlayerState);//客户端每个玩家都有一个playerstate
 	MikuPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(MikuPlayerState, this);//owner负责持久化数据，持有技能。AvatarActor负责角色位置，视觉表现
 	AbilitySystemComponent = MikuPlayerState->GetAbilitySystemComponent();
+	//不在Beginplay初始化，可以防止某些依赖项（在这个例子中是OwnerActor和AvatarActor）尚未就绪而访问空指针，同时解提高代码复用
+	Cast<UGASAbilitySystemComponentBase>(AbilitySystemComponent)->AbilityActorInfoSet();
 	AttributeSet = MikuPlayerState->GetAttributeSet();
 	
 	//这里不能用断言，由于客户端只存在一个控制器，但存在多个character，如果这里是断言，其他character如果执行这段代码，就一定拿不到控制器，那么游戏就会立马崩溃

@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "UI/HUD/MikuHUD.h"
 #include "UI/Widget/MikuUserWidget.h"
 #include "UI/Controller/MikuWidgetController.h"

@@ -10,6 +10,7 @@ Plugins/*/Build/
 
 /.idea/
 /.Backup/
+/.vscode/
 
 *.log
 *.obj

@@ -27,5 +27,5 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Vision")
 	UCameraComponent* Camera;
 
-	void InitAbilityActorInfo();
+	virtual void InitAbilityActorInfo() override;
 };

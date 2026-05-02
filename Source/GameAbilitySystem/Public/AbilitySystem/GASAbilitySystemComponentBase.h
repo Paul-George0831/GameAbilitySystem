@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "GASAbilitySystemComponentBase.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTags, const FGameplayTagContainer&);
 /**
  * 
  */
@@ -14,4 +15,12 @@ class GAMEABILITYSYSTEM_API UGASAbilitySystemComponentBase : public UAbilitySyst
 {
 	GENERATED_BODY()
 	
+public:
+	void AbilityActorInfoSet();	
+	
+	FEffectAssetTags EffectAssetTags;//名为EffectAssetTags的多播代理，用于在效果应用时广播效果的标签容器
+	
+protected:
+	
+	void EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle) const;
 };

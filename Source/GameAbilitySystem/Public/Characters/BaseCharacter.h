@@ -39,4 +39,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UAttributeSet> AttributeSet;
+	
+	virtual void InitAbilityActorInfo();
 };

@@ -72,7 +72,8 @@ protected:
 	
 	UPROPERTY()
 	TMap<FActiveGameplayEffectHandle, UAbilitySystemComponent*> ActiveEffectHandles;
-private:
+protected:
 	
-	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
+	float ActorLevel = 1.f;
 };

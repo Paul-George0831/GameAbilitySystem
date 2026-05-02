@@ -11,6 +11,28 @@
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 	
+USTRUCT()
+struct FEffectProperties
+{
+	GENERATED_BODY()
+	
+	FEffectProperties(){};
+	
+	FGameplayEffectContextHandle EffectContextHandle;
+	
+	UPROPERTY()
+	UAbilitySystemComponent* SourceASC = nullptr;
+
+	UPROPERTY()
+	AActor* SourceAvatarActor = nullptr;
+	
+	UPROPERTY()
+	AController* SourceController = nullptr;
+
+	UPROPERTY()
+	ACharacter* SourceCharacter = nullptr;
+};
+
 UCLASS()
 class GAMEABILITYSYSTEM_API UGASAttributeSetBase : public UAttributeSet
 {
@@ -27,6 +49,12 @@ public:
 	
 	//重写一个函数注册网络复制，告诉引擎哪些类成员需要同步，用什么规则同步
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	
+	//在实际值真正改变前调用
+	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
+
+	//当GE生效的时候调用
+	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
 	
 	//创建一个健康值变量，给健康值绑定一个网络同步健康值的回调函数
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category="Vital Attribute")
@@ -54,4 +82,19 @@ public:
 	UFUNCTION()
 	void OnRep_MaxMana(const FGameplayAttributeData& oldMaxMana);
 	
+	UPROPERTY()
+	UAbilitySystemComponent* TargetASC = nullptr;
+
+	UPROPERTY()
+	AActor* TargetAvatarActor = nullptr;
+	
+	UPROPERTY()
+	AController* TargetController = nullptr;
+
+	UPROPERTY()
+	ACharacter* TargetCharacter = nullptr;
+	
+private:
+	
+	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const;
 };
