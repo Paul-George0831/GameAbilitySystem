@@ -47,7 +47,6 @@ void APlayerCharacter::OnRep_PlayerState()
 void APlayerCharacter::InitAbilityActorInfo()
 {
 	AMikuPlayerState* MikuPlayerState = GetPlayerState<AMikuPlayerState>();//先获取到一个APlayerState，然后强转为AMikuPlayerState
-	check(MikuPlayerState);
 	check(MikuPlayerState);//客户端每个玩家都有一个playerstate
 	MikuPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(MikuPlayerState, this);//owner负责持久化数据，持有技能。AvatarActor负责角色位置，视觉表现
 	AbilitySystemComponent = MikuPlayerState->GetAbilitySystemComponent();
