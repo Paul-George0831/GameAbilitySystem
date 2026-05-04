@@ -20,10 +20,27 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 {
 	const UGASAttributeSetBase* _AS = CastChecked<UGASAttributeSetBase>(_AttributeSet);
 	
-	_AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(_AS->GetHealthAttribute()).AddUObject(this, &UOverlayWidgetController::HealthChanged);//把获得的委托绑定到this的Healthchange函数
-	_AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(_AS->GetMaxHealthAttribute()).AddUObject(this, &UOverlayWidgetController::MaxHealthChanged);
-	_AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(_AS->GetManaAttribute()).AddUObject(this, &UOverlayWidgetController::ManaChanged);
-	_AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(_AS->GetMaxManaAttribute()).AddUObject(this, &UOverlayWidgetController::MaxManaChanged);
+	_AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(_AS->GetHealthAttribute()).AddLambda(
+		[this](const FOnAttributeChangeData& Data)
+		{
+			OnHealthChanged.Broadcast(Data.NewValue);
+		}
+	);//把获得的委托绑定到this的Healthchange函数
+	_AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(_AS->GetMaxHealthAttribute()).AddLambda(
+		[this](const FOnAttributeChangeData& Data)
+		{
+			OnMaxHealthChanged.Broadcast(Data.NewValue);
+		});
+	_AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(_AS->GetManaAttribute()).AddLambda(
+		[this](const FOnAttributeChangeData& Data)
+		{
+			OnManaChanged.Broadcast(Data.NewValue);
+		});
+	_AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(_AS->GetMaxManaAttribute()).AddLambda(
+		[this](const FOnAttributeChangeData& Data)
+		{
+			OnMaxManaChanged.Broadcast(Data.NewValue);
+		});
 
 	Cast<UGASAbilitySystemComponentBase>(_AbilitySystemComponent)->EffectAssetTags.AddLambda(//执行数据变化的逻辑都在controller层，所以在这里绑定委托EffectAssetTags
 		[this](const FGameplayTagContainer& AssetTagContainer)->void
@@ -39,24 +56,4 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 			}
 		}	
 	);
-}
-
-void UOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
-{
-	OnHealthChanged.Broadcast(Data.NewValue);	
-}
-
-void UOverlayWidgetController::MaxHealthChanged(const FOnAttributeChangeData& Data) const
-{
-	OnMaxHealthChanged.Broadcast(Data.NewValue);	
-}
-
-void UOverlayWidgetController::ManaChanged(const FOnAttributeChangeData& Data) const
-{
-	OnManaChanged.Broadcast(Data.NewValue);
-}
-
-void UOverlayWidgetController::MaxManaChanged(const FOnAttributeChangeData& Data) const
-{
-	OnMaxManaChanged.Broadcast(Data.NewValue);
 }
