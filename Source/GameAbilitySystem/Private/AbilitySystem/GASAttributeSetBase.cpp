@@ -1,5 +1,6 @@
 #include "AbilitySystem/GASAttributeSetBase.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
@@ -25,6 +26,11 @@ void UGASAttributeSetBase::GetLifetimeReplicatedProps(TArray<class FLifetimeProp
 	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, Mana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, MaxMana, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, Strength, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, Intelligence, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, Resilience, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, Vigor, COND_None, REPNOTIFY_Always);
+	
 }
 
 void UGASAttributeSetBase::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
@@ -32,7 +38,7 @@ void UGASAttributeSetBase::PreAttributeBaseChange(const FGameplayAttribute& Attr
 	Super::PreAttributeBaseChange(Attribute, NewValue);
 	if (Attribute == GetHealthAttribute())
 	{
-		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());//5.5之前这么写不行，但是5.5之后对newvalue钳值是可以修改修饰符的值的
 	}
 	else if (Attribute == GetManaAttribute())
 	{
@@ -46,25 +52,47 @@ void UGASAttributeSetBase::PostGameplayEffectExecute(const struct FGameplayEffec
 	FEffectProperties Props;
 	SetEffectProperties(Data, Props);
 	
+
 }
 
-void UGASAttributeSetBase::OnRep_Health(const FGameplayAttributeData& oldHealth)
+void UGASAttributeSetBase::OnRep_Strength(const FGameplayAttributeData& oldStrength) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSetBase, Strength, oldStrength);
+}
+
+void UGASAttributeSetBase::OnRep_Intelligence(const FGameplayAttributeData& oldIntelligence) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSetBase, Intelligence, oldIntelligence);
+}
+
+void UGASAttributeSetBase::OnRep_Resilience(const FGameplayAttributeData& oldResilience) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSetBase, Resilience, oldResilience);
+}
+
+void UGASAttributeSetBase::OnRep_Vigor(const FGameplayAttributeData& oldVigor) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSetBase, Vigor, oldVigor);
+}
+
+void UGASAttributeSetBase::OnRep_Health(const FGameplayAttributeData& oldHealth) const
+//需要使用UPROPERTY宏ReplicatedUsing = OnRep_Health来绑定回调
 {
 	//通知ASC组件已经完成了网络同步Health，同时让能力系统（ASC）能够记录这个变化，以便服务器发现异常值回滚
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSetBase, Health, oldHealth);
 }
 
-void UGASAttributeSetBase::OnRep_MaxHealth(const FGameplayAttributeData& oldMaxHealth)
+void UGASAttributeSetBase::OnRep_MaxHealth(const FGameplayAttributeData& oldMaxHealth) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSetBase, MaxHealth, oldMaxHealth);
 }
 
-void UGASAttributeSetBase::OnRep_Mana(const FGameplayAttributeData& oldMana)
+void UGASAttributeSetBase::OnRep_Mana(const FGameplayAttributeData& oldMana) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSetBase, Mana, oldMana);
 }
 
-void UGASAttributeSetBase::OnRep_MaxMana(const FGameplayAttributeData& oldMaxMana)
+void UGASAttributeSetBase::OnRep_MaxMana(const FGameplayAttributeData& oldMaxMana) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSetBase, MaxMana, oldMaxMana);
 }
@@ -94,6 +122,9 @@ void UGASAttributeSetBase::SetEffectProperties(const FGameplayEffectModCallbackD
 	
 	if (IsValid(&Data.Target) && IsValid(Data.Target.GetAvatarActor()))
 	{
-		AActor* TargetActor = Data.Target.GetAvatarActor();
+		Props.SourceAvatarActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
+		Props.SourceController = Data.Target.AbilityActorInfo->PlayerController.Get();
+		Props.SourceCharacter = Cast<ACharacter>(Props.SourceCharacter);
+		Props.SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Props.SourceAvatarActor);
 	}
 }

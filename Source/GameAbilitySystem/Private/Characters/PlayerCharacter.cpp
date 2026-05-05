@@ -47,10 +47,10 @@ void APlayerCharacter::OnRep_PlayerState()
 void APlayerCharacter::InitAbilityActorInfo()
 {
 	AMikuPlayerState* MikuPlayerState = GetPlayerState<AMikuPlayerState>();//先获取到一个APlayerState，然后强转为AMikuPlayerState
-	check(MikuPlayerState);//客户端每个玩家都有一个playerstate
+	check(MikuPlayerState);//客户端每个玩家都有一个player state
 	MikuPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(MikuPlayerState, this);//owner负责持久化数据，持有技能。AvatarActor负责角色位置，视觉表现
 	AbilitySystemComponent = MikuPlayerState->GetAbilitySystemComponent();
-	//不在Beginplay初始化，可以防止某些依赖项（在这个例子中是OwnerActor和AvatarActor）尚未就绪而访问空指针，同时解提高代码复用
+	//不在Begin play初始化，可以防止某些依赖项（在这个例子中是OwnerActor和AvatarActor）尚未就绪而访问空指针，同时解提高代码复用
 	Cast<UGASAbilitySystemComponentBase>(AbilitySystemComponent)->AbilityActorInfoSet();
 	AttributeSet = MikuPlayerState->GetAttributeSet();
 	

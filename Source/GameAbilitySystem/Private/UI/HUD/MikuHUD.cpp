@@ -29,7 +29,7 @@ void AMikuHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySyst
 	
 	const FMikuWidgetControllerParams params(PC, PS, ASC, AS);
 	
-	UOverlayWidgetController* OverlayController = GetOverlayWidgetController(params);
+	UOverlayWidgetController* OverlayController = GetOverlayWidgetController(params);//方便逻辑，存一个本地变量
 	
 	OverlayUserWidget->SetWidgetController(OverlayController);
 	OverlayController->BroadcastInitialValues();//在GetOverlayWidgetController就已经初始化类内overlaywidgetcontroller了，这里无需继续赋值overlaywidgetcontroller

@@ -6,7 +6,7 @@
 
 void UGASAbilitySystemComponentBase::AbilityActorInfoSet()
 {
-	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UGASAbilitySystemComponentBase::EffectApplied);//当GE应用到自身，这一行的作用就是绑定这个触发事件到EffectApplied
+	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UGASAbilitySystemComponentBase::EffectApplied);//当GE应用到自身，这一行的作用就是绑定EffectApplied到OnGameplayEffectAppliedDelegateToSelf事件
 }
 
 void UGASAbilitySystemComponentBase::EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle) const
