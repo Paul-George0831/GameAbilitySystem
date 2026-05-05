@@ -51,29 +51,29 @@ public:
 	ATTRIBUTE_ACCESSORS(UGASAttributeSetBase, Resilience)
 	ATTRIBUTE_ACCESSORS(UGASAttributeSetBase, Vigor)
 	
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Strength, Category="Primary Attributes")
-	FGameplayAttributeData Strength;
+	 UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Strength, Category="Primary Attributes")
+	 FGameplayAttributeData Strength;
 	
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Intelligence, Category="Primary Attributes")
-	FGameplayAttributeData Intelligence;
+	 UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Intelligence, Category="Primary Attributes")
+	 FGameplayAttributeData Intelligence;
 	
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Resilience, Category="Primary Attributes")
-	FGameplayAttributeData Resilience;
+	 UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Resilience, Category="Primary Attributes")
+	 FGameplayAttributeData Resilience;
 	
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Vigor, Category="Primary Attributes")
-	FGameplayAttributeData Vigor;
+	 UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Vigor, Category="Primary Attributes")
+	 FGameplayAttributeData Vigor;
 	
-	UFUNCTION()
-	void OnRep_Strength(const FGameplayAttributeData& oldStrength) const;
+	 UFUNCTION()
+	 void OnRep_Strength(const FGameplayAttributeData& oldStrength) const;
 	
-	UFUNCTION()
-	void OnRep_Intelligence(const FGameplayAttributeData& oldIntelligence) const;
+	 UFUNCTION()
+	 void OnRep_Intelligence(const FGameplayAttributeData& oldIntelligence) const;
 	
-	UFUNCTION()
-	void OnRep_Resilience(const FGameplayAttributeData& oldResilience) const;
+	 UFUNCTION()
+	 void OnRep_Resilience(const FGameplayAttributeData& oldResilience) const;
 	
-	UFUNCTION()
-	void OnRep_Vigor(const FGameplayAttributeData& oldVigor) const;
+	 UFUNCTION()
+	 void OnRep_Vigor(const FGameplayAttributeData& oldVigor) const;
 	
 	//重写一个函数注册网络复制，告诉引擎哪些类成员需要同步，用什么规则同步
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;

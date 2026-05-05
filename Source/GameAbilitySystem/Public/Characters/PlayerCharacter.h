@@ -5,6 +5,7 @@
 #include "PlayerCharacter.generated.h"
 
 class USpringArmComponent;
+class UGameplayEffect;
 class UCameraComponent;
 class AWeapon;
 
@@ -20,6 +21,12 @@ public:
 
 	//当初始化成功playerstate的时候回调
 	virtual void OnRep_PlayerState() override;
+
+	void InitializePrimaryAttributes() const;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Primary Attributes")
+	TSubclassOf<UGameplayEffect> DefaultPrimaryAttribute;
+	
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Vision")
 	USpringArmComponent* SpringArm;
