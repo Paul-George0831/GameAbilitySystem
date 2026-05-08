@@ -23,14 +23,22 @@ void UGASAttributeSetBase::GetLifetimeReplicatedProps(TArray<class FLifetimeProp
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	//DOREPLIFETIME_CONDITION_NOTIFY，UE的网络同步注册指令
 	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, Health, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, Mana, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, MaxMana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, Strength, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, Intelligence, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, Resilience, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, Vigor, COND_None, REPNOTIFY_Always);
 	
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, MaxMana, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, MaxHealth, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, Armor, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, ArmorPenetration, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, BlockChance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, CriticalHitChance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, CriticalHitDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, CriticalHitResilience, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, HealthRegeneration, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, ManaRegeneration, COND_None, REPNOTIFY_Always);
 }
 
 void UGASAttributeSetBase::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
@@ -73,6 +81,46 @@ void UGASAttributeSetBase::OnRep_Resilience(const FGameplayAttributeData& oldRes
 void UGASAttributeSetBase::OnRep_Vigor(const FGameplayAttributeData& oldVigor) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSetBase, Vigor, oldVigor);
+}
+
+void UGASAttributeSetBase::OnRep_Armor(const FGameplayAttributeData& oldArmor) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSetBase, Armor, oldArmor);
+}
+
+void UGASAttributeSetBase::OnRep_ArmorPenetration(const FGameplayAttributeData& oldArmorPenetration) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSetBase, ArmorPenetration, oldArmorPenetration);
+}
+
+void UGASAttributeSetBase::OnRep_BlockChance(const FGameplayAttributeData& oldBlockChance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSetBase, BlockChance, oldBlockChance);
+}
+
+void UGASAttributeSetBase::OnRep_CriticalHitChance(const FGameplayAttributeData& oldCriticalHitChance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSetBase, CriticalHitChance, oldCriticalHitChance);
+}
+
+void UGASAttributeSetBase::OnRep_CriticalHitDamage(const FGameplayAttributeData& oldCriticalHitDamage) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSetBase, CriticalHitDamage, oldCriticalHitDamage);
+}
+
+void UGASAttributeSetBase::OnRep_CriticalHitResilience(const FGameplayAttributeData& oldCriticalHitResilience) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSetBase, CriticalHitResilience, oldCriticalHitResilience);
+}
+
+void UGASAttributeSetBase::OnRep_HealthRegeneration(const FGameplayAttributeData& oldHealthRegeneration) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSetBase, HealthRegeneration, oldHealthRegeneration);
+}
+
+void UGASAttributeSetBase::OnRep_ManaRegeneration(const FGameplayAttributeData& oldManaRegeneration) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSetBase, ManaRegeneration, oldManaRegeneration);
 }
 
 void UGASAttributeSetBase::OnRep_Health(const FGameplayAttributeData& oldHealth) const

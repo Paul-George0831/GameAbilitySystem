@@ -3,14 +3,16 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
+#include "Interfaces/CombatInterface.h" 
 #include "BaseCharacter.generated.h"
 
+class UGameplayEffect;
 class AWeapon;
 class UAbilitySystemComponent;
 class UAttributeSet;
 
 UCLASS()
-class GAMEABILITYSYSTEM_API ABaseCharacter : public ACharacter, public IAbilitySystemInterface
+class GAMEABILITYSYSTEM_API ABaseCharacter : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
 {
 	GENERATED_BODY()
 
@@ -25,7 +27,7 @@ public:
 	
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
-
+	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;	
 protected:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Items")

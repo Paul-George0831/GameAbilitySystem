@@ -4,6 +4,7 @@
 #include "Player/MikuPlayerState.h"
 #include "AbilitySystem/GASAttributeSetBase.h"
 #include "AbilitySystem/GASAbilitySystemComponentBase.h"
+#include "Net/UnrealNetwork.h"
 
 AMikuPlayerState::AMikuPlayerState()
 {
@@ -16,6 +17,18 @@ AMikuPlayerState::AMikuPlayerState()
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
 	AttributeSet = CreateDefaultSubobject<UGASAttributeSetBase>(TEXT("AttributeSet"));
+}
+
+void AMikuPlayerState::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AMikuPlayerState, Level);
+	 
+	//DOREPLIFETIME_CONDITION_NOTIFY(AMikuPlayerState, Level, COND_None, REPNOTIFY_Always);
+}
+
+void AMikuPlayerState::OnRep_Level(int32 OldLevel)
+{
 }
 
 UAbilitySystemComponent* AMikuPlayerState::GetAbilitySystemComponent() const

@@ -21,11 +21,16 @@ public:
 
 	//当初始化成功playerstate的时候回调
 	virtual void OnRep_PlayerState() override;
-
-	void InitializePrimaryAttributes() const;
 	
+	void InitializeDefaultAttributes() const;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Primary Attributes")
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttribute;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Secondary Attributes")
+	TSubclassOf<UGameplayEffect> DefaultSecondaryAttribute;
+
+	virtual int32 GetPlayerLevel() const override;
 	
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Vision")

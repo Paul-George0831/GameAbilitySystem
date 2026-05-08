@@ -30,6 +30,11 @@ void AEnemy::UnHighlight()
 	GetMesh()->SetRenderCustomDepth(false);
 }
 
+int32 AEnemy::GetPlayerLevel() const
+{
+	return this->Level;
+}
+
 void AEnemy::InitAbilityActorInfo()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);

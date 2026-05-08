@@ -2,6 +2,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/GASAbilitySystemComponentBase.h"
+#include "AbilitySystem/GASAttributeSetBase.h"
 #include "Camera/CameraComponent.h"
 #include "Controller/DefaultPlayerController.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -44,13 +45,24 @@ void APlayerCharacter::OnRep_PlayerState()
 	InitAbilityActorInfo();
 }
 
-void APlayerCharacter::InitializePrimaryAttributes() const//可以只在服务端调用，因为属性注册了replicate指令
+void APlayerCharacter::InitializeDefaultAttributes() const
 {
-	check(DefaultPrimaryAttribute);
-	check(GetAbilitySystemComponent());
-	const FGameplayEffectContextHandle EffectContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
-	const FGameplayEffectSpecHandle EffectSpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DefaultPrimaryAttribute, 1.f, EffectContextHandle);
-	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*EffectSpecHandle.Data.Get(), GetAbilitySystemComponent());
+	ApplyEffectToSelf(DefaultPrimaryAttribute, 1.f);
+	ApplyEffectToSelf(DefaultSecondaryAttribute, 1.f);
+	const UGASAttributeSetBase* _AS = Cast<UGASAttributeSetBase>(GetPlayerState<AMikuPlayerState>()->GetAttributeSet());
+	const float MaxHealth = _AS->GetMaxHealth();
+	const int32 Level = GetPlayerLevel();
+	const float Vig = _AS->GetVigor();
+	UE_LOG(LogTemp, Warning, TEXT("MaxHealth is %f"), MaxHealth);
+	UE_LOG(LogTemp, Warning, TEXT("Level is %d"), Level);
+	UE_LOG(LogTemp, Warning, TEXT("Vigor is %f"), Vig);
+}
+
+int32 APlayerCharacter::GetPlayerLevel() const
+{
+	const AMikuPlayerState* __PS = GetPlayerState<AMikuPlayerState>();
+	check(__PS);
+	return __PS->GetPlayerLevel();
 }
 
 void APlayerCharacter::InitAbilityActorInfo()
@@ -71,5 +83,5 @@ void APlayerCharacter::InitAbilityActorInfo()
 			MikuHUD->InitOverlay(MikuPlayerController,MikuPlayerState,AbilitySystemComponent, AttributeSet);
 		}
 	}
-	InitializePrimaryAttributes();
+	InitializeDefaultAttributes();
 }
