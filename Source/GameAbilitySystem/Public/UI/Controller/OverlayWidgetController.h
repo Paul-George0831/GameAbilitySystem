@@ -9,7 +9,6 @@
 
 class UMikuUserWidget;
 struct FOnAttributeChangeData;
-//分别给HP和MaxHP创建一个动态多播委托
 
 USTRUCT(BlueprintType)
 struct FUIWidgetRow : public FTableRowBase
@@ -29,7 +28,8 @@ struct FUIWidgetRow : public FTableRowBase
 	UTexture2D* Image = nullptr;
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);//如果需要与蓝图通信，就需要创建个动态多播/单播委托否则就是静态
+//分别给HP和MaxHP创建一个动态多播委托
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);//如果需要与蓝图通信，就需要创建个动态多播/单播委托否则就是静态。多播委托可以绑定多个函数
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowDelegate, FUIWidgetRow, Row);
 
 UCLASS(BlueprintType, Blueprintable)

@@ -49,13 +49,20 @@ void APlayerCharacter::InitializeDefaultAttributes() const
 {
 	ApplyEffectToSelf(DefaultPrimaryAttribute, 1.f);
 	ApplyEffectToSelf(DefaultSecondaryAttribute, 1.f);
+	ApplyEffectToSelf(DefaultVitalAttribute, 1.f);
 	const UGASAttributeSetBase* _AS = Cast<UGASAttributeSetBase>(GetPlayerState<AMikuPlayerState>()->GetAttributeSet());
-	const float MaxHealth = _AS->GetMaxHealth();
+	
+	/*Debug Start*/
+	const float MaxMana = _AS->GetMaxMana();
 	const int32 Level = GetPlayerLevel();
-	const float Vig = _AS->GetVigor();
-	UE_LOG(LogTemp, Warning, TEXT("MaxHealth is %f"), MaxHealth);
-	UE_LOG(LogTemp, Warning, TEXT("Level is %d"), Level);
-	UE_LOG(LogTemp, Warning, TEXT("Vigor is %f"), Vig);
+	const float Intl = _AS->GetIntelligence();
+	// UE_LOG(LogTemp, Warning, TEXT("MaxHealth is %f"), MaxHealth);
+	// UE_LOG(LogTemp, Warning, TEXT("Level is %d"), Level);
+	// UE_LOG(LogTemp, Warning, TEXT("Vigor is %f"), Vig);
+	// UE_LOG(LogTemp, Warning, TEXT("MaxMana: %f"), MaxMana);
+	// UE_LOG(LogTemp, Warning, TEXT("Intelligence: %f"), Intl);
+	// UE_LOG(LogTemp, Warning, TEXT("Level: %i"), Level);
+	/*Debug End*/
 }
 
 int32 APlayerCharacter::GetPlayerLevel() const

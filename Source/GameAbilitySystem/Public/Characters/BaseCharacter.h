@@ -28,6 +28,17 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;	
+	
+	/*GE属性集*/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Primary Attributes")
+	TSubclassOf<UGameplayEffect> DefaultPrimaryAttribute;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Secondary Attributes")
+	TSubclassOf<UGameplayEffect> DefaultSecondaryAttribute;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Vital Attributes")
+	TSubclassOf<UGameplayEffect> DefaultVitalAttribute;
+	/*End*/
 protected:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Items")
@@ -36,6 +47,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Weapon")
 	TSubclassOf<AWeapon> DefaultWeaponClass;
 
+	/*ASC&&AS*/
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
@@ -43,4 +55,5 @@ protected:
 	TObjectPtr<UAttributeSet> AttributeSet;
 	
 	virtual void InitAbilityActorInfo();
+	/*End*/
 };

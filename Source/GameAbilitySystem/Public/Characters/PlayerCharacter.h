@@ -24,12 +24,6 @@ public:
 	
 	void InitializeDefaultAttributes() const;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Primary Attributes")
-	TSubclassOf<UGameplayEffect> DefaultPrimaryAttribute;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Secondary Attributes")
-	TSubclassOf<UGameplayEffect> DefaultSecondaryAttribute;
-
 	virtual int32 GetPlayerLevel() const override;
 	
 protected:
