@@ -3,14 +3,20 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
 #include "AttributeSet.h"
+#include "AuraGameplayTags.h"
 #include "GASAttributeSetBase.generated.h"
+
+//通常如果需要监听某个属性，就得使用GetAttribute()这个函数，而GetAttribute这个函数返回值就是FGameplayAttribute
+//DECLARE_DELEGATE_RetVal(FGameplayAttribute, FGameplayAttributeSignature)
 
 #define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
 	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
-	
+
+struct FGameplayTag;
+
 USTRUCT()
 struct FEffectProperties
 {
@@ -40,6 +46,9 @@ class GAMEABILITYSYSTEM_API UGASAttributeSetBase : public UAttributeSet
 	
 public:
 	
+	// 定义一个别名，代表“返回 FGameplayAttribute 的无参函数指针”
+	using FAttributeGetterPtr = FGameplayAttribute(*)();
+	
 	UGASAttributeSetBase();//auraattributeset
 	
 	ATTRIBUTE_ACCESSORS(UGASAttributeSetBase, Health)
@@ -61,6 +70,10 @@ public:
 	ATTRIBUTE_ACCESSORS(UGASAttributeSetBase, HealthRegeneration)
 	ATTRIBUTE_ACCESSORS(UGASAttributeSetBase, ManaRegeneration)
 	
+	//不能使用UPROPERTY宏来存放值类型为自定义委托的TMap
+	//函数指针内存开销以及调用开销更小，同时如果需要UPROPERTY序列化存储TMap也可以执行，而委托不支持序列化
+	/*在不需要知道上下文，不需要蓝图绑定事件，不需要一对多广播，不需要序列化和网络同步的情况下，使用函数指针较好*/
+	TMap<FGameplayTag, 	FAttributeGetterPtr> TagToAttribute;
 	
 	 UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Strength, Category="Primary Attributes")
 	 FGameplayAttributeData Strength;

@@ -3,6 +3,8 @@
 #include "UI/Controller/MikuWidgetController.h"
 #include "UI/Controller/OverlayWidgetController.h"
 #include "Blueprint/UserWidget.h"
+#include "UI/Controller/AttributeMenuWidgetController.h"
+
 
 UOverlayWidgetController* AMikuHUD::GetOverlayWidgetController(const FMikuWidgetControllerParams& params)//初始化overlaywidgetcontroller和获取都写在这里面了
 {
@@ -15,6 +17,17 @@ UOverlayWidgetController* AMikuHUD::GetOverlayWidgetController(const FMikuWidget
 		OverlayWidgetController->BindCallbacksToDependencies();//一旦创建好了OverlayWidgetController,就应该绑定回调函数
 	}
 	return OverlayWidgetController;
+}
+
+UAttributeMenuWidgetController* AMikuHUD::GetAttributeMenuWidgetController(const FMikuWidgetControllerParams& params)
+{
+	if (AttributeMenuWidgetController == nullptr)
+	{
+		AttributeMenuWidgetController = NewObject<UAttributeMenuWidgetController>(this, AttributesMenuWidgetControllerClass);
+		AttributeMenuWidgetController->SetWidgetControllerParams(params);
+		AttributeMenuWidgetController->BindCallbacksToDependencies();
+	}
+	return AttributeMenuWidgetController;
 }
 
 void AMikuHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS)

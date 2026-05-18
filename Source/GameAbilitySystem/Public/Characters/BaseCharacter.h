@@ -6,6 +6,7 @@
 #include "Interfaces/CombatInterface.h" 
 #include "BaseCharacter.generated.h"
 
+class UGameplayAbility;
 class UGameplayEffect;
 class AWeapon;
 class UAbilitySystemComponent;
@@ -56,4 +57,10 @@ protected:
 	
 	virtual void InitAbilityActorInfo();
 	/*End*/
+	
+private:
+	
+	UPROPERTY(EditAnywhere, Category = "Primary Attributes")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+	
 };

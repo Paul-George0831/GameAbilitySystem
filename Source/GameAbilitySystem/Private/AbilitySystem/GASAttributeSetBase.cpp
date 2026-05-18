@@ -3,6 +3,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
+#include "AuraGameplayTags.h"
 #include "Net/UnrealNetwork.h"
 
 UGASAttributeSetBase::UGASAttributeSetBase()
@@ -12,10 +13,27 @@ UGASAttributeSetBase::UGASAttributeSetBase()
 	void SetHealth(float Val);
 	void InitHealth(float Val);
 	*/
-	InitHealth(60.f);
-	InitMaxHealth(100.f);
-	InitMana(10.f);
-	InitMaxMana(50.f);
+	
+	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Primary_Strength, &GetStrengthAttribute);
+	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Primary_Intelligence, &GetIntelligenceAttribute);
+	/* Primary Attributes */
+	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Primary_Strength, GetStrengthAttribute);
+	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Primary_Intelligence, GetIntelligenceAttribute);
+	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Primary_Resilience, GetResilienceAttribute);
+	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Primary_Vigor, GetVigorAttribute);
+	
+	/* Secondary Attributes */
+	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Secondary_Armor, GetArmorAttribute);
+	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Secondary_ArmorPenetration, GetArmorPenetrationAttribute);
+	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Secondary_BlockChance, GetBlockChanceAttribute);	
+	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Secondary_CriticalHitChance, GetCriticalHitChanceAttribute);
+	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Secondary_CriticalHitResistance, GetCriticalHitResilienceAttribute);
+	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Secondary_CriticalHitDamage, GetCriticalHitDamageAttribute);
+	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Secondary_HealthRegeneration, GetHealthRegenerationAttribute);
+	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Secondary_ManaRegeneration, GetManaRegenerationAttribute);
+	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Secondary_MaxHealth, GetMaxHealthAttribute);
+	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Secondary_MaxMana, GetMaxManaAttribute);
+	
 }
 
 void UGASAttributeSetBase::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
