@@ -3,6 +3,7 @@
 #include "AbilitySystemComponent.h"
 #include "GameplayEffect.h"
 #include "GameplayEffectTypes.h"
+#include "AbilitySystem/GASAbilitySystemComponentBase.h"
 #include "Components/StaticMeshComponent.h"
 
 ABaseCharacter::ABaseCharacter()
@@ -45,4 +46,11 @@ void ABaseCharacter::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffe
 	EffectContextHandle.AddSourceObject(this);
 	const FGameplayEffectSpecHandle EffectSpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(GameplayEffectClass, Level,EffectContextHandle);
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*EffectSpecHandle.Data.Get(), GetAbilitySystemComponent());
+}
+
+void ABaseCharacter::AddCharacterAbilities() const
+{
+	if (!HasAuthority()) return;
+	UGASAbilitySystemComponentBase* _ASC = Cast<UGASAbilitySystemComponentBase>(AbilitySystemComponent);
+	_ASC->AddCharacterAbilities(StartupAbilities);
 }

@@ -30,6 +30,8 @@ public:
 
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;	
 	
+	void AddCharacterAbilities() const;
+	
 	/*GE属性集*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Primary Attributes")
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttribute;

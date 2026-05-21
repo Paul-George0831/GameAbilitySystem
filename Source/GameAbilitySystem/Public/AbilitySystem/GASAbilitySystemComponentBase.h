@@ -20,7 +20,15 @@ public:
 	
 	FEffectAssetTags EffectAssetTags;//名为EffectAssetTags的多播代理，用于在效果应用时广播效果的标签容器
 	
+	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
+	
+	//AbilityInputTagHeld
+	void AbilityInputTagHeld(const FGameplayTag& InputTag);
+	//AbilityInputTagReleased
+	void AbilityInputTagReleased(const FGameplayTag& InputTag);
 protected:
 	
-	void EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle) const;
+	UFUNCTION(Client, Reliable)
+	void ClientEffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle) const;
+
 };
