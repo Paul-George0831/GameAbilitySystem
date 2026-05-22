@@ -24,7 +24,7 @@ void ADefaultPlayerController::AutoRun()
 	if (!bAutoRunning) return;
 	if (APawn* ControllerPawn = GetPawn())
 	{
-		const FVector LocationOnSpline = Spline->FindLocationClosestToWorldLocation(ControllerPawn->GetActorLocation(), ESplineCoordinateSpace::World);
+		const FVector LocationOnSpline = Spline->FindLocationClosestToWorldLocation(ControllerPawn->GetActorLocation(), ESplineCoordinateSpace::World);//是FindLocation而不是FindDirection
 		const FVector Direction = Spline->FindDirectionClosestToWorldLocation(LocationOnSpline, ESplineCoordinateSpace::World);
 		ControllerPawn->AddMovementInput(Direction);
 		
