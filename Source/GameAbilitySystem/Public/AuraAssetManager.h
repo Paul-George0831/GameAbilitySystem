@@ -17,7 +17,5 @@ class GAMEABILITYSYSTEM_API UAuraAssetManager : public UAssetManager
 public:
 	static UAuraAssetManager& Get();
 	
-protected:
-
 	virtual void StartInitialLoading() override;
 };

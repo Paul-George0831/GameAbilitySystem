@@ -71,14 +71,14 @@ void ADefaultPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
 	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
-		bTargeting = CurHighLightActor != nullptr;//如果当前鼠标悬停的地方是角色，CurHighLightActor就不为空，返回true
+		bTargeting = CurHighLightActor != nullptr;
 		bAutoRunning = false;
 	}
 }
 
 void ADefaultPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
-	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))//如果按下不是鼠标左键，直接通知其被按下了
+	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))//如果按下不是鼠标左键
 	{
 		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
 		return;
@@ -87,7 +87,7 @@ void ADefaultPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 	{
 		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
 	}
-	else
+	else//如果没有目标，并且输入标签还是LMB，开始导航
 	{
 		APawn* ControllerPawn = GetPawn();
 		if (FollowTime <= ShortThreshold && ControllerPawn)

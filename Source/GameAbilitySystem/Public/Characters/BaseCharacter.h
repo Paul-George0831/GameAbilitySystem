@@ -28,9 +28,14 @@ public:
 	
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
+	virtual FVector GetCombatSocketLocation() const override;
+	
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;	
 	
 	void AddCharacterAbilities() const;
+	
+	UPROPERTY(EditAnywhere, Category = "Character | Combat")
+	FName WeaponTipSocketName;
 	
 	/*GE属性集*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Primary Attributes")
@@ -45,7 +50,7 @@ public:
 protected:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Items")
-	AWeapon* CurWeapon;
+	TObjectPtr<UStaticMeshComponent> CurWeapon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Weapon")
 	TSubclassOf<AWeapon> DefaultWeaponClass;

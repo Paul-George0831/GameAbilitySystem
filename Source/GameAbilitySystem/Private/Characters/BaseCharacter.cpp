@@ -9,6 +9,10 @@
 ABaseCharacter::ABaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = false;
+	
+	CurWeapon = CreateDefaultSubobject<UStaticMeshComponent>("Weapon");
+	CurWeapon->SetupAttachment(GetMesh(), "WeaponHandSocket");
+	CurWeapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ABaseCharacter::BeginPlay()
@@ -32,6 +36,11 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 UAbilitySystemComponent* ABaseCharacter::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
+}
+
+FVector ABaseCharacter::GetCombatSocketLocation() const
+{
+	return CurWeapon->GetSocketLocation(WeaponTipSocketName);
 }
 
 void ABaseCharacter::InitAbilityActorInfo()

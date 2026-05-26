@@ -17,6 +17,8 @@ APlayerCharacter::APlayerCharacter()
 	SpringArm->SetupAttachment(GetRootComponent());
 	Camera->SetupAttachment(SpringArm);
 
+	GetMesh()->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));
+	
 	//将旋转朝向移动，设置转向速度
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 640.f, 0.f);
@@ -54,9 +56,9 @@ void APlayerCharacter::InitializeDefaultAttributes() const
 	const UGASAttributeSetBase* _AS = Cast<UGASAttributeSetBase>(GetPlayerState<AMikuPlayerState>()->GetAttributeSet());
 	
 	/*Debug Start*/
-	const float MaxMana = _AS->GetMaxMana();
-	const int32 Level = GetPlayerLevel();
-	const float Intl = _AS->GetIntelligence();
+	// const float MaxMana = _AS->GetMaxMana();
+	// const int32 Level = GetPlayerLevel();
+	// const float Intl = _AS->GetIntelligence();
 	// UE_LOG(LogTemp, Warning, TEXT("MaxHealth is %f"), MaxHealth);
 	// UE_LOG(LogTemp, Warning, TEXT("Level is %d"), Level);
 	// UE_LOG(LogTemp, Warning, TEXT("Vigor is %f"), Vig);

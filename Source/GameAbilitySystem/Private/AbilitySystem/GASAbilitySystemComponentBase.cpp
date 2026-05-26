@@ -14,6 +14,7 @@ void UGASAbilitySystemComponentBase::AbilityActorInfoSet()
 	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UGASAbilitySystemComponentBase::ClientEffectApplied);
 }
 
+//在BaseCharacter调用，使其初始化AcitivgatableAbilities
 void UGASAbilitySystemComponentBase::AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities)
 {
 	for (const auto& AbilityClass : StartupAbilities)
@@ -27,6 +28,7 @@ void UGASAbilitySystemComponentBase::AddCharacterAbilities(const TArray<TSubclas
 	}
 }
 
+//遍历已经初始化好的带有标签的ActivatableAbilities,激活带有相同标签的能力
 void UGASAbilitySystemComponentBase::AbilityInputTagHeld(const FGameplayTag& InputTag)
 {
 	if (!InputTag.IsValid()) return;
