@@ -23,6 +23,7 @@ void UTargetDataUnderCursor::Activate()
 		const FGameplayAbilitySpecHandle SpecHandle = GetAbilitySpecHandle();
 		const FPredictionKey ActivationPredictionKey = GetActivationPredictionKey();
 		AbilitySystemComponent.Get()->AbilityTargetDataSetDelegate(SpecHandle, ActivationPredictionKey).AddUObject(this, &UTargetDataUnderCursor::OnTargetDataReplicatedCallback);
+		
 		/*CallReplicatedTargetDataDelegatesIfSet 会检查是否有 TargetData 已经被复制过来了并且还未被消费。如果已经有数据了，它会立即广播委托（触发上面的回调）；
 		 *如果还没有数据即CallReplicatedTargetDataDelegatesIfSet返回false，则调用SetWaitingOnRemotePlayerData() 将 Ability Task 标记为"等待远程数据"状态 — 此时 Task 不会完成，而是挂起等待客户端发来的数据
 		 */
@@ -46,7 +47,7 @@ void UTargetDataUnderCursor::SendMouseCursorData()
 	//DataHandle打包给服务器
 	AbilitySystemComponent->ServerSetReplicatedTargetData(GetAbilitySpecHandle(), GetActivationPredictionKey(), DataHandle, FGameplayTag(),AbilitySystemComponent->ScopedPredictionKey);
 
-	if (ShouldBroadcastAbilityTaskDelegates())
+	if (ShouldBroadcastAbilityTaskDelegates())//客户端本地预测用
 	{
 		ValidData.Broadcast(DataHandle);
 	}

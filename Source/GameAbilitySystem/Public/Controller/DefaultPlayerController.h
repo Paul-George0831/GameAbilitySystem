@@ -30,7 +30,6 @@ protected:
 
 	//移动函数，接受一个输入动作值
 	void Move(const FInputActionValue& Value);
-
 	
 	UPROPERTY(BlueprintReadWrite)
 	bool bAutoRunning = false;
@@ -38,10 +37,19 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<class UInputMappingContext> DefaultPlayerContext;
 
+	void ShiftPressed(const FInputActionValue& Value) { bShiftPressed = true; };
+	
+	void ShiftReleased(const FInputActionValue& Value) { bShiftPressed = false; };
+	
+	bool bShiftPressed = false;
+	
 	//移动输入
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> MoveAction;
 
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> ShiftAction;
+	
 	void CursorTrace();
 
 	TObjectPtr<IHighlightInterface> LastHighLightedActor;

@@ -67,6 +67,8 @@ UGASAbilitySystemComponentBase* ADefaultPlayerController::GetASC()
 	return _GASASC;
 }
 
+
+/*当遇到一个键处理多个状态可以使用*/
 void ADefaultPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
 	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
@@ -80,14 +82,11 @@ void ADefaultPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
 	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))//如果按下不是鼠标左键
 	{
-		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
+		if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
 		return;
 	}
-	if (bTargeting)
-	{
-		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
-	}
-	else//如果没有目标，并且输入标签还是LMB，开始导航
+	if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
+	if (!bTargeting && !bShiftPressed)
 	{
 		APawn* ControllerPawn = GetPawn();
 		if (FollowTime <= ShortThreshold && ControllerPawn)
@@ -119,7 +118,7 @@ void ADefaultPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
 		return;
 	}
-	if (bTargeting)
+	if (bTargeting || bShiftPressed)
 	{
 		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
 	}
@@ -166,6 +165,8 @@ void ADefaultPlayerController::SetupInputComponent()
 	UAuraEnhancedInputComponent* EnhancedInputComponent = CastChecked<UAuraEnhancedInputComponent>(InputComponent);
 	//绑定回调函数
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ADefaultPlayerController::Move);
+	EnhancedInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &ADefaultPlayerController::ShiftPressed);
+	EnhancedInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &ADefaultPlayerController::ShiftReleased);
 	EnhancedInputComponent->BindAbilityActions(InputConfig, this, &ADefaultPlayerController::AbilityInputTagPressed,&ADefaultPlayerController::AbilityInputTagReleased, &ADefaultPlayerController::AbilityInputTagHeld);
 }
 

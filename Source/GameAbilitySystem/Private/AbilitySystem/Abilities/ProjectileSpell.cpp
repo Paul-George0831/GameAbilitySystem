@@ -6,7 +6,7 @@
 #include "Actors/AuraProjectile.h"
 #include "Interfaces/CombatInterface.h"
 
-void UProjectileSpell::SpawnProjectile()
+void UProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation)
 {
 	const bool bIsOnServer = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (!bIsOnServer) return;
@@ -14,7 +14,10 @@ void UProjectileSpell::SpawnProjectile()
 	FTransform SpawnTransform;
 	if(CombatInterface)
 	{
-		SpawnTransform.SetLocation(CombatInterface->GetCombatSocketLocation());
+		const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
+		const FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
+		SpawnTransform.SetLocation(SocketLocation);
+		SpawnTransform.SetRotation(Rotation.Quaternion());
 	}
 	AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(ProjectileClass, SpawnTransform, GetOwningActorFromActorInfo(),
 		Cast<APawn>(GetOwningActorFromActorInfo()),

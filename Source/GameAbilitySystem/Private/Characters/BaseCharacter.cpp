@@ -4,11 +4,15 @@
 #include "GameplayEffect.h"
 #include "GameplayEffectTypes.h"
 #include "AbilitySystem/GASAbilitySystemComponentBase.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
 
 ABaseCharacter::ABaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = false;
+	
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	
 	CurWeapon = CreateDefaultSubobject<UStaticMeshComponent>("Weapon");
 	CurWeapon->SetupAttachment(GetMesh(), "WeaponHandSocket");
