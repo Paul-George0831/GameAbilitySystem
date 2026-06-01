@@ -65,6 +65,7 @@ void UGASAttributeSetBase::PreAttributeBaseChange(const FGameplayAttribute& Attr
 	if (Attribute == GetHealthAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());//5.5之前这么写不行，但是5.5之后对newvalue钳值是可以修改修饰符的值的
+		UE_LOG(LogTemp, Warning, TEXT("Changed Health is %f, The OwnerActor is %s"), NewValue, *GetOwningActor()->GetName());
 	}
 	else if (Attribute == GetManaAttribute())
 	{

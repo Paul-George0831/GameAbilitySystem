@@ -22,8 +22,6 @@ public:
 	//当初始化成功playerstate的时候回调
 	virtual void OnRep_PlayerState() override;
 	
-	void InitializeDefaultAttributes() const;
-
 	virtual int32 GetPlayerLevel() const override;
 	
 protected:
@@ -33,5 +31,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Vision")
 	UCameraComponent* Camera;
 
+	
 	virtual void InitAbilityActorInfo() override;
 };

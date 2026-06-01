@@ -7,7 +7,6 @@
 
 void UMiku_Animinstance::NativeInitializeAnimation()
 {
-	//需要调用父类的函数，否则会导致动画蓝图无法获取角色对象
 	Super::NativeInitializeAnimation();
 	PlayerCharacter = Cast<APlayerCharacter>(TryGetPawnOwner());
 	if (PlayerCharacter) {

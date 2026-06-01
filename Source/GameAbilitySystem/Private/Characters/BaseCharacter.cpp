@@ -6,13 +6,17 @@
 #include "AbilitySystem/GASAbilitySystemComponentBase.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "GameAbilitySystem/GameAbilitySystem.h"
 
 ABaseCharacter::ABaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Projectile, ECR_Overlap);
+	GetMesh()->SetGenerateOverlapEvents(true);
 	
 	CurWeapon = CreateDefaultSubobject<UStaticMeshComponent>("Weapon");
 	CurWeapon->SetupAttachment(GetMesh(), "WeaponHandSocket");
@@ -66,4 +70,23 @@ void ABaseCharacter::AddCharacterAbilities() const
 	if (!HasAuthority()) return;
 	UGASAbilitySystemComponentBase* _ASC = Cast<UGASAbilitySystemComponentBase>(AbilitySystemComponent);
 	_ASC->AddCharacterAbilities(StartupAbilities);
+}
+
+void ABaseCharacter::InitializeDefaultAttributes() const
+{
+	ApplyEffectToSelf(DefaultPrimaryAttribute, 1.f);
+	ApplyEffectToSelf(DefaultSecondaryAttribute, 1.f);
+	ApplyEffectToSelf(DefaultVitalAttribute, 1.f);
+	
+	/*Debug Start*/
+	// const float MaxMana = _AS->GetMaxMana();
+	// const int32 Level = GetPlayerLevel();
+	// const float Intl = _AS->GetIntelligence();
+	// UE_LOG(LogTemp, Warning, TEXT("MaxHealth is %f"), MaxHealth);
+	// UE_LOG(LogTemp, Warning, TEXT("Level is %d"), Level);
+	// UE_LOG(LogTemp, Warning, TEXT("Vigor is %f"), Vig);
+	// UE_LOG(LogTemp, Warning, TEXT("MaxMana: %f"), MaxMana);
+	// UE_LOG(LogTemp, Warning, TEXT("Intelligence: %f"), Intl);
+	// UE_LOG(LogTemp, Warning, TEXT("Level: %i"), Level);
+	/*Debug End*/
 }

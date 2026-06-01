@@ -55,6 +55,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Weapon")
 	TSubclassOf<AWeapon> DefaultWeaponClass;
 
+	void InitializeDefaultAttributes() const;
+	
 	/*ASC&&AS*/
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
