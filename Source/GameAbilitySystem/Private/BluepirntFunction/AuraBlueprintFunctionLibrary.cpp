@@ -2,6 +2,9 @@
 
 
 #include "BluepirntFunction/AuraBlueprintFunctionLibrary.h"
+
+#include "AbilitySystemComponent.h"
+#include "GameMode/GAS_GameModeBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/MikuPlayerState.h"
 #include "UI/Controller/MikuWidgetController.h"
@@ -39,4 +42,38 @@ UAttributeMenuWidgetController* UAuraBlueprintFunctionLibrary::GetAttributeMenuW
 		}
 	}
 	return nullptr;
+}
+
+void UAuraBlueprintFunctionLibrary::InitializeDefaultAttributes(const UObject* WorldContext,
+	ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC)
+{
+	AGAS_GameModeBase* GameModeBase = Cast<AGAS_GameModeBase>(UGameplayStatics::GetGameMode(WorldContext));
+	if (!GameModeBase) return;
+	
+	AActor* AvatarActor = ASC->GetAvatarActor();
+	
+	UCharacterClassInfo* CharacterClassInfo = GameModeBase->CharacterClassInfo;
+	const FCharacterClassDefaultInfo CharacterClassDefaultInfo = CharacterClassInfo->FindClassDefaultInfo(CharacterClass);
+	FGameplayEffectContextHandle GameplayEffectContextHandle = ASC->MakeEffectContext();
+	GameplayEffectContextHandle.AddSourceObject(AvatarActor);
+	const FGameplayEffectSpecHandle PrimaryGameplayEffectSpec = ASC->MakeOutgoingSpec(CharacterClassDefaultInfo.PrimaryAttributes, Level, GameplayEffectContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*PrimaryGameplayEffectSpec.Data.Get());
+	
+	const FGameplayEffectSpecHandle SecondaryGameplayEffectSpec = ASC->MakeOutgoingSpec(CharacterClassInfo->SecondaryAttributes, Level, GameplayEffectContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*SecondaryGameplayEffectSpec.Data.Get());
+	
+	const FGameplayEffectSpecHandle VitalGameplayEffectSpec = ASC->MakeOutgoingSpec(CharacterClassInfo->VitalAttributes, Level, GameplayEffectContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*VitalGameplayEffectSpec.Data.Get());
+}
+
+void UAuraBlueprintFunctionLibrary::GiveStartupAbilities(const UObject* WorldContext, UAbilitySystemComponent* ASC)
+{
+	AGAS_GameModeBase* GameModeBase = Cast<AGAS_GameModeBase>(UGameplayStatics::GetGameMode(WorldContext));
+	if (!GameModeBase) return;
+	
+	for (const auto AbilityClass : GameModeBase->CharacterClassInfo->CommonAbilities)
+	{
+		FGameplayAbilitySpec GAspec = FGameplayAbilitySpec(AbilityClass, 1);
+		ASC->GiveAbility(GAspec);
+	}
 }

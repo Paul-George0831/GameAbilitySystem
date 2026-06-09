@@ -30,12 +30,25 @@ public:
 
 	virtual FVector GetCombatSocketLocation() const override;
 	
+	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
+	
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;	
 	
 	void AddCharacterAbilities() const;
 	
 	UPROPERTY(EditAnywhere, Category = "Character | Combat")
 	FName WeaponTipSocketName;
+	
+	virtual void Die() override;
+	
+	UFUNCTION(NetMulticast, Reliable)
+	/*
+	 *NetMulticast — 服务器调用时，此函数会在服务器和所有连接的客户端上执行。只能从服务器调用，不能在客户端上调用。
+	 *Reliable — 保证该 RPC 一定会到达所有连接的客户端，即使发生丢包也会重传，且保证按顺序处理。
+	 * 
+	 */
+	
+	virtual void MulticastHandleDeath();
 	
 	/*GE属性集*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Primary Attributes")
@@ -55,7 +68,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Weapon")
 	TSubclassOf<AWeapon> DefaultWeaponClass;
 
-	void InitializeDefaultAttributes() const;
+	virtual void InitializeDefaultAttributes() const;
 	
 	/*ASC&&AS*/
 	UPROPERTY(VisibleAnywhere)
@@ -66,6 +79,23 @@ protected:
 	
 	virtual void InitAbilityActorInfo();
 	/*End*/
+	
+	UPROPERTY(EditDefaultsOnly)
+	UAnimMontage* HitReactMontage;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;
+		
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartWeaponDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
+	
+	void Dissolve();
 	
 private:
 	

@@ -37,6 +37,18 @@ struct FEffectProperties
 
 	UPROPERTY()
 	ACharacter* SourceCharacter = nullptr;
+
+	UPROPERTY()
+	UAbilitySystemComponent* TargetASC = nullptr;
+
+	UPROPERTY()
+	AActor* TargetAvatarActor = nullptr;
+
+	UPROPERTY()
+	AController* TargetController = nullptr;
+
+	UPROPERTY()
+	ACharacter* TargetCharacter = nullptr;
 };
 
 UCLASS()
@@ -69,6 +81,8 @@ public:
 	ATTRIBUTE_ACCESSORS(UGASAttributeSetBase, CriticalHitResilience)
 	ATTRIBUTE_ACCESSORS(UGASAttributeSetBase, HealthRegeneration)
 	ATTRIBUTE_ACCESSORS(UGASAttributeSetBase, ManaRegeneration)
+	
+	ATTRIBUTE_ACCESSORS(UGASAttributeSetBase, IncomingDamage)
 	
 	//不能使用UPROPERTY宏来存放值类型为自定义委托的TMap
 	//函数指针内存开销以及调用开销更小，同时如果需要UPROPERTY序列化存储TMap也可以执行，而委托不支持序列化
@@ -118,6 +132,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category="Secondary Attribute")
 	FGameplayAttributeData MaxHealth;
     //
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Meta Attribute")
+	FGameplayAttributeData IncomingDamage;
 	
 	UFUNCTION()
 	void OnRep_Strength(const FGameplayAttributeData& oldStrength) const;

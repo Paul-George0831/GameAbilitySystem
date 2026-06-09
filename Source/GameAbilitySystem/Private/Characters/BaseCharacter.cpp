@@ -51,8 +51,29 @@ FVector ABaseCharacter::GetCombatSocketLocation() const
 	return CurWeapon->GetSocketLocation(WeaponTipSocketName);
 }
 
+UAnimMontage* ABaseCharacter::GetHitReactMontage_Implementation()
+{
+	return HitReactMontage;
+}
+
 void ABaseCharacter::InitAbilityActorInfo()
 {
+}
+
+void ABaseCharacter::Dissolve()
+{
+	if (IsValid(DissolveMaterialInstance))
+	{
+		UMaterialInstanceDynamic* DynamicMaterialInstance = UMaterialInstanceDynamic::Create(DissolveMaterialInstance, this);
+		GetMesh()->SetMaterial(0, DynamicMaterialInstance);
+		StartDissolveTimeline(DynamicMaterialInstance);
+	}
+	if (IsValid(WeaponDissolveMaterialInstance))
+	{
+		UMaterialInstanceDynamic* DynamicMaterialInstance = UMaterialInstanceDynamic::Create(WeaponDissolveMaterialInstance, this);
+		CurWeapon->SetMaterial(0, DynamicMaterialInstance);
+		StartWeaponDissolveTimeline(DynamicMaterialInstance);
+	}
 }
 
 void ABaseCharacter::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const
@@ -70,6 +91,27 @@ void ABaseCharacter::AddCharacterAbilities() const
 	if (!HasAuthority()) return;
 	UGASAbilitySystemComponentBase* _ASC = Cast<UGASAbilitySystemComponentBase>(AbilitySystemComponent);
 	_ASC->AddCharacterAbilities(StartupAbilities);
+}
+
+void ABaseCharacter::Die()
+{
+	CurWeapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
+	MulticastHandleDeath();
+}
+
+void ABaseCharacter::MulticastHandleDeath_Implementation()
+{
+	CurWeapon->SetSimulatePhysics(true);
+	CurWeapon->SetEnableGravity(true);
+	
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetEnableGravity(true);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	
+	
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	Dissolve();
 }
 
 void ABaseCharacter::InitializeDefaultAttributes() const

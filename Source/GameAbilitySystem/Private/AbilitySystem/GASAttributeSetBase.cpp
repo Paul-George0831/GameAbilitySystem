@@ -4,6 +4,7 @@
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
 #include "AuraGameplayTags.h"
+#include "Interfaces/CombatInterface.h"
 #include "Net/UnrealNetwork.h"
 
 UGASAttributeSetBase::UGASAttributeSetBase()
@@ -14,8 +15,6 @@ UGASAttributeSetBase::UGASAttributeSetBase()
 	void InitHealth(float Val);
 	*/
 	
-	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Primary_Strength, &GetStrengthAttribute);
-	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Primary_Intelligence, &GetIntelligenceAttribute);
 	/* Primary Attributes */
 	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Primary_Strength, GetStrengthAttribute);
 	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Primary_Intelligence, GetIntelligenceAttribute);
@@ -78,7 +77,31 @@ void UGASAttributeSetBase::PostGameplayEffectExecute(const struct FGameplayEffec
 	Super::PostGameplayEffectExecute(Data);
 	FEffectProperties Props;
 	SetEffectProperties(Data, Props);
-	
+	if(Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
+	{
+		const float LocalIncomingDamage = GetIncomingDamage();
+		SetIncomingDamage(0.f);
+		if (LocalIncomingDamage > 0.f)
+		{
+			const float NewHealth = GetHealth() - LocalIncomingDamage;
+			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
+			const bool bFatal = NewHealth <= 0.f;
+			if (bFatal)
+			{
+				ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor);
+				if (CombatInterface)
+				{
+					CombatInterface->Die();
+				}
+			}
+			else
+			{
+				FGameplayTagContainer TagContainer;
+				TagContainer.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
+				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
+			}
+		}
+	}
 
 }
 
@@ -189,9 +212,9 @@ void UGASAttributeSetBase::SetEffectProperties(const FGameplayEffectModCallbackD
 	
 	if (IsValid(&Data.Target) && IsValid(Data.Target.GetAvatarActor()))
 	{
-		Props.SourceAvatarActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
-		Props.SourceController = Data.Target.AbilityActorInfo->PlayerController.Get();
-		Props.SourceCharacter = Cast<ACharacter>(Props.SourceCharacter);
-		Props.SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Props.SourceAvatarActor);
+		Props.TargetAvatarActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
+		Props.TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
+		Props.TargetCharacter = Cast<ACharacter>(Props.TargetAvatarActor);
+		Props.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Props.TargetAvatarActor);
 	}
 }

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Data/CharacterClassInfo.h"
 #include "GameFramework/GameModeBase.h"
 #include "GAS_GameModeBase.generated.h"
 
@@ -13,5 +14,10 @@ UCLASS()
 class GAMEABILITYSYSTEM_API AGAS_GameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
+	
+public:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
+	TObjectPtr<UCharacterClassInfo> CharacterClassInfo;
 	
 };

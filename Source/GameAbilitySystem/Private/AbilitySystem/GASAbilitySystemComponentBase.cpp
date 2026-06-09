@@ -25,7 +25,7 @@ void UGASAbilitySystemComponentBase::AddCharacterAbilities(const TArray<TSubclas
 			AbilitySpec.GetDynamicSpecSourceTags().AddTag(AuraAbility->StartupInputTag);
 			GiveAbility(AbilitySpec);//Grants an Ability,Returns handle that can be used in TryActivateAbility
 		}
-	}
+	}	
 }
 
 //遍历已经初始化好的带有标签的ActivatableAbilities,激活带有相同标签的能力

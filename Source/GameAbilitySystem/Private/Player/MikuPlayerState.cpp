@@ -9,8 +9,7 @@
 AMikuPlayerState::AMikuPlayerState()
 {
 	//设置网络同步频率
-	NetUpdateFrequency = 100.f;
-
+	SetNetUpdateFrequency(100.f);
 	//创建ASC组件以及属性集
 	AbilitySystemComponent = CreateDefaultSubobject<UGASAbilitySystemComponentBase>(TEXT("AbilitySystemComponent"));
 	AbilitySystemComponent->SetIsReplicated(true);
