@@ -29,7 +29,7 @@ void UProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation)
 	UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
 	const FGameplayEffectSpecHandle ProjectileEffectSpecHandle = SourceASC->MakeOutgoingSpec(ProjectileEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
 	
-	const float ScaledDamage = Damage.GetValueAtLevel(7.f);
+	const float ScaledDamage = Damage.GetValueAtLevel(3.f);
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(ProjectileEffectSpecHandle, FAuraGameplayTags::Get().Damage, ScaledDamage);
 	Projectile->DamageEffectSpecHandle = ProjectileEffectSpecHandle;
 	Projectile->FinishSpawning(SpawnTransform);

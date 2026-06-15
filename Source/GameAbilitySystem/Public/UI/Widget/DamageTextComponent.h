@@ -16,6 +16,6 @@ class GAMEABILITYSYSTEM_API UDamageTextComponent : public UWidgetComponent
 
 public:
 	
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, Blueprintcallable)
 	void SetDamageText(const float Damage);
 };

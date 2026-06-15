@@ -25,7 +25,7 @@
  	Sphere->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
  	Sphere->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Overlap);
  	Sphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
- 	
+
  	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMovement");
  	ProjectileMovement->InitialSpeed = 550.f;
  	ProjectileMovement->MaxSpeed = 550.f;
@@ -35,12 +35,16 @@
 void AAuraProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
  	SetLifeSpan(LifeSpan);
- 	
+
  	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AAuraProjectile::OnSphereBeginOverlap);
- 	
- 	LoopingSoundComponent = UGameplayStatics::SpawnSoundAttached(LoopingSound, GetRootComponent());
+ 	Sphere->IgnoreActorWhenMoving(GetInstigator(), true);
+
+ 	if (LoopingSound)
+ 	{
+ 		LoopingSoundComponent = UGameplayStatics::SpawnSoundAttached(LoopingSound, GetRootComponent());
+ 	}
 }
 
  void AAuraProjectile::Destroyed()
@@ -49,7 +53,10 @@ void AAuraProjectile::BeginPlay()
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-		LoopingSoundComponent->Stop();
+		if (LoopingSoundComponent)
+		{
+			LoopingSoundComponent->Stop();
+		}
 	}
 	Super::Destroyed();
 }
@@ -59,7 +66,10 @@ void AAuraProjectile::BeginPlay()
  {
 	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
  	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
- 	LoopingSoundComponent->Stop();
+ 	if (LoopingSoundComponent)
+ 	{
+ 		LoopingSoundComponent->Stop();
+ 	}
  	if (HasAuthority())
  	{
  		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
@@ -72,4 +82,5 @@ void AAuraProjectile::BeginPlay()
  	{
  		bHit = true;
  	}
+ 	
  }

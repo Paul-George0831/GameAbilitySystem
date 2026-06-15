@@ -42,13 +42,14 @@ public:
 	virtual void Die() override;
 	
 	UFUNCTION(NetMulticast, Reliable)
+	virtual void MulticastHandleDeath();
+	
 	/*
 	 *NetMulticast — 服务器调用时，此函数会在服务器和所有连接的客户端上执行。只能从服务器调用，不能在客户端上调用。
 	 *Reliable — 保证该 RPC 一定会到达所有连接的客户端，即使发生丢包也会重传，且保证按顺序处理。
 	 * 
 	 */
 	
-	virtual void MulticastHandleDeath();
 	
 	/*GE属性集*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Primary Attributes")

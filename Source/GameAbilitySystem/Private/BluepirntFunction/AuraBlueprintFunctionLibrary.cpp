@@ -47,12 +47,10 @@ UAttributeMenuWidgetController* UAuraBlueprintFunctionLibrary::GetAttributeMenuW
 void UAuraBlueprintFunctionLibrary::InitializeDefaultAttributes(const UObject* WorldContext,
 	ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC)
 {
-	AGAS_GameModeBase* GameModeBase = Cast<AGAS_GameModeBase>(UGameplayStatics::GetGameMode(WorldContext));
-	if (!GameModeBase) return;
-	
 	AActor* AvatarActor = ASC->GetAvatarActor();
 	
-	UCharacterClassInfo* CharacterClassInfo = GameModeBase->CharacterClassInfo;
+	UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContext);
+	if(!CharacterClassInfo) return;
 	const FCharacterClassDefaultInfo CharacterClassDefaultInfo = CharacterClassInfo->FindClassDefaultInfo(CharacterClass);
 	FGameplayEffectContextHandle GameplayEffectContextHandle = ASC->MakeEffectContext();
 	GameplayEffectContextHandle.AddSourceObject(AvatarActor);
@@ -68,12 +66,17 @@ void UAuraBlueprintFunctionLibrary::InitializeDefaultAttributes(const UObject* W
 
 void UAuraBlueprintFunctionLibrary::GiveStartupAbilities(const UObject* WorldContext, UAbilitySystemComponent* ASC)
 {
-	AGAS_GameModeBase* GameModeBase = Cast<AGAS_GameModeBase>(UGameplayStatics::GetGameMode(WorldContext));
-	if (!GameModeBase) return;
-	
-	for (const auto AbilityClass : GameModeBase->CharacterClassInfo->CommonAbilities)
+	UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContext);
+	if (!CharacterClassInfo) return;
+	for (const auto AbilityClass : CharacterClassInfo->CommonAbilities)
 	{
 		FGameplayAbilitySpec GAspec = FGameplayAbilitySpec(AbilityClass, 1);
 		ASC->GiveAbility(GAspec);
 	}
+}
+
+UCharacterClassInfo* UAuraBlueprintFunctionLibrary::GetCharacterClassInfo(const UObject* WorldContext)
+{
+	if (AGAS_GameModeBase* _GM = Cast<AGAS_GameModeBase>(UGameplayStatics::GetGameMode(WorldContext))) return _GM->CharacterClassInfo;
+	return nullptr;
 }

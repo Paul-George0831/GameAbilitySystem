@@ -4,6 +4,7 @@
 #include "GameFramework/PlayerController.h"
 #include "DefaultPlayerController.generated.h"
 
+class UDamageTextComponent;
 class USplineComponent;
 class UGASAbilitySystemComponentBase;
 struct FGameplayTag;
@@ -23,6 +24,9 @@ public:
 
 	virtual void PlayerTick(float DeltaTime) override;
 
+	UFUNCTION(Client, Reliable)
+	void ShowDamageNumber(float Damage, ACharacter* TargetCharacter);
+	
 protected:
 	virtual void BeginPlay() override;
 
@@ -33,6 +37,10 @@ protected:
 	
 	UPROPERTY(BlueprintReadWrite)
 	bool bAutoRunning = false;
+	
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UDamageTextComponent> DamageTextComponentClass;
+	
 private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<class UInputMappingContext> DefaultPlayerContext;

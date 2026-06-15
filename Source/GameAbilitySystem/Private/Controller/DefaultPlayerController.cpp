@@ -8,7 +8,9 @@
 #include "EnhancedInputSubsystems.h"
 #include "NavigationPath.h"
 #include "NavigationSystem.h"
+#include "UI/Widget/DamageTextComponent.h"
 #include "Components/SplineComponent.h"
+#include "GameFramework/Character.h"
 #include "Input/AuraEnhancedInputComponent.h"
 
 ADefaultPlayerController::ADefaultPlayerController()
@@ -43,6 +45,18 @@ void ADefaultPlayerController::PlayerTick(float DeltaTime)
 	CursorTrace();
 	
 	AutoRun();
+}
+
+void ADefaultPlayerController::ShowDamageNumber_Implementation(float Damage, ACharacter* TargetCharacter)
+{
+	if (IsValid(TargetCharacter) && DamageTextComponentClass)
+	{
+		UDamageTextComponent* DamageText = NewObject<UDamageTextComponent>(TargetCharacter, DamageTextComponentClass);
+		DamageText->RegisterComponent();
+		DamageText->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+		//DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		DamageText->SetDamageText(Damage);
+	}
 }
 
 void ADefaultPlayerController::CursorTrace()

@@ -177,6 +177,7 @@ public:
 
 	//在实际值真正改变前调用
 	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
+	void ShowDamageText(const FEffectProperties& Props, float LocalIncomingDamage) const;
 
 	//当GE生效的时候调用
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;

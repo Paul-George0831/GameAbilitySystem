@@ -37,8 +37,7 @@ class GAMEABILITYSYSTEM_API UCharacterClassInfo : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	
-	UFUNCTION()
+		
 	FCharacterClassDefaultInfo FindClassDefaultInfo(ECharacterClass InClass);
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class Default")
@@ -52,4 +51,8 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
 	TArray<TSubclassOf<UGameplayAbility>> CommonAbilities;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
+	TObjectPtr<UCurveTable> DamageCalculationCoefficients;
+	
 };

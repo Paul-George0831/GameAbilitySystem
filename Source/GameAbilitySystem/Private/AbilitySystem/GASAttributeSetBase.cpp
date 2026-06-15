@@ -4,7 +4,9 @@
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
 #include "AuraGameplayTags.h"
+#include "Controller/DefaultPlayerController.h"
 #include "Interfaces/CombatInterface.h"
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 
 UGASAttributeSetBase::UGASAttributeSetBase()
@@ -28,7 +30,7 @@ UGASAttributeSetBase::UGASAttributeSetBase()
 	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Secondary_CriticalHitChance, GetCriticalHitChanceAttribute);
 	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Secondary_CriticalHitResistance, GetCriticalHitResilienceAttribute);
 	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Secondary_CriticalHitDamage, GetCriticalHitDamageAttribute);
-	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Secondary_HealthRegeneration, GetHealthRegenerationAttribute);
+	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Secondary_HealthRegeneration, GetHealthRegenerationAttribute); 
 	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Secondary_ManaRegeneration, GetManaRegenerationAttribute);
 	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Secondary_MaxHealth, GetMaxHealthAttribute);
 	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Secondary_MaxMana, GetMaxManaAttribute);
@@ -72,11 +74,27 @@ void UGASAttributeSetBase::PreAttributeBaseChange(const FGameplayAttribute& Attr
 	}
 }
 
+void UGASAttributeSetBase::ShowDamageText(const FEffectProperties& Props, const float LocalIncomingDamage) const
+{
+	if (Props.SourceCharacter != Props.TargetCharacter)
+	{
+		if (ADefaultPlayerController* _PC = Cast<ADefaultPlayerController>(UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0)))
+		{
+			_PC->ShowDamageNumber(LocalIncomingDamage, Props.TargetCharacter);
+		}
+	}
+}
+
 void UGASAttributeSetBase::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
 	FEffectProperties Props;
 	SetEffectProperties(Data, Props);
+	if (Data.EvaluatedData.Attribute == GetArmorAttribute())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Armor - Magnitude: %f, CurrentValue: %f, BaseValue: %f"),
+			Data.EvaluatedData.Magnitude, GetArmor(), Armor.GetBaseValue());
+	}
 	if(Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
 	{
 		const float LocalIncomingDamage = GetIncomingDamage();
@@ -100,6 +118,7 @@ void UGASAttributeSetBase::PostGameplayEffectExecute(const struct FGameplayEffec
 				TagContainer.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
 				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
 			}
+			ShowDamageText(Props, LocalIncomingDamage);
 		}
 	}
 
