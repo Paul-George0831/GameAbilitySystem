@@ -27,9 +27,18 @@ void UProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation)
 		Cast<APawn>(GetOwningActorFromActorInfo()),
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
-	const FGameplayEffectSpecHandle ProjectileEffectSpecHandle = SourceASC->MakeOutgoingSpec(ProjectileEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
+	FGameplayEffectContextHandle ContextHandle = SourceASC->MakeEffectContext();
+	ContextHandle.SetAbility(this);
+	ContextHandle.AddSourceObject(Projectile);
+	TArray<TWeakObjectPtr<AActor>> Actors;
+	Actors.Add(Projectile);
+	ContextHandle.AddActors(Actors);
+	FHitResult HitResult;
+	HitResult.Location = ProjectileTargetLocation;
+	ContextHandle.AddHitResult(HitResult);
+	const FGameplayEffectSpecHandle ProjectileEffectSpecHandle = SourceASC->MakeOutgoingSpec(ProjectileEffectClass, GetAbilityLevel(), ContextHandle);
 	
-	const float ScaledDamage = Damage.GetValueAtLevel(3.f);
+	const float ScaledDamage = Damage.GetValueAtLevel(1.f);
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(ProjectileEffectSpecHandle, FAuraGameplayTags::Get().Damage, ScaledDamage);
 	Projectile->DamageEffectSpecHandle = ProjectileEffectSpecHandle;
 	Projectile->FinishSpawning(SpawnTransform);
