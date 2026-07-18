@@ -4,6 +4,7 @@
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
 #include "AuraGameplayTags.h"
+#include "BluepirntFunction/AuraBlueprintFunctionLibrary.h"
 #include "Controller/DefaultPlayerController.h"
 #include "Interfaces/CombatInterface.h"
 #include "Kismet/GameplayStatics.h"
@@ -35,6 +36,11 @@ UGASAttributeSetBase::UGASAttributeSetBase()
 	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Secondary_MaxHealth, GetMaxHealthAttribute);
 	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Secondary_MaxMana, GetMaxManaAttribute);
 	
+	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Resistance_Arcane, GetArcaneResistanceAttribute);
+	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Resistance_Fire, GetFireResistanceAttribute);
+	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Resistance_Lightning, GetLightningResistanceAttribute);
+	TagToAttribute.Add(FAuraGameplayTags::Get().Attributes_Resistance_Physical, GetPhysicalResistanceAttribute);
+	
 }
 
 void UGASAttributeSetBase::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
@@ -58,6 +64,11 @@ void UGASAttributeSetBase::GetLifetimeReplicatedProps(TArray<class FLifetimeProp
 	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, CriticalHitResilience, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, HealthRegeneration, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, ManaRegeneration, COND_None, REPNOTIFY_Always);
+	
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, FireResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, LightningResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, ArcaneResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSetBase, PhysicalResistance, COND_None, REPNOTIFY_Always);
 }
 
 void UGASAttributeSetBase::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
@@ -74,13 +85,13 @@ void UGASAttributeSetBase::PreAttributeBaseChange(const FGameplayAttribute& Attr
 	}
 }
 
-void UGASAttributeSetBase::ShowDamageText(const FEffectProperties& Props, const float LocalIncomingDamage) const
+void UGASAttributeSetBase::ShowFloatingText(const FEffectProperties& Props, float Damage, bool bBlockedHit, bool bCriticalHit) const
 {
 	if (Props.SourceCharacter != Props.TargetCharacter)
 	{
 		if (ADefaultPlayerController* _PC = Cast<ADefaultPlayerController>(UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0)))
 		{
-			_PC->ShowDamageNumber(LocalIncomingDamage, Props.TargetCharacter);
+			_PC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
 		}
 	}
 }
@@ -118,10 +129,35 @@ void UGASAttributeSetBase::PostGameplayEffectExecute(const struct FGameplayEffec
 				TagContainer.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
 				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
 			}
-			ShowDamageText(Props, LocalIncomingDamage);
+			const bool bBlock = UAuraBlueprintFunctionLibrary::IsBlockedHit(Props.EffectContextHandle);
+            const bool bCriticalHit = UAuraBlueprintFunctionLibrary::IsCriticalHit(Props.EffectContextHandle);
+            ShowFloatingText(Props, LocalIncomingDamage, bBlock, bCriticalHit);
 		}
 	}
 
+}
+
+void UGASAttributeSetBase::OnRep_FireResistance(const FGameplayAttributeData& oldFireResistance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSetBase, FireResistance, oldFireResistance);
+}
+
+void UGASAttributeSetBase::OnRep_LightningResistance(const FGameplayAttributeData& oldLightningResistance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSetBase, LightningResistance, oldLightningResistance);
+	
+}
+
+void UGASAttributeSetBase::OnRep_ArcaneResistance(const FGameplayAttributeData& oldArcaneResistance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSetBase, ArcaneResistance, oldArcaneResistance);
+	
+}
+
+void UGASAttributeSetBase::OnRep_PhysicalResistance(const FGameplayAttributeData& oldPhysicalResistance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSetBase, PhysicalResistance, oldPhysicalResistance);
+	
 }
 
 void UGASAttributeSetBase::OnRep_Strength(const FGameplayAttributeData& oldStrength) const

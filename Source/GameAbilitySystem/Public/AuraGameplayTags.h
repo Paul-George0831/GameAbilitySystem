@@ -38,8 +38,19 @@ public:
 	FGameplayTag InputTag_4;
 
 	FGameplayTag Damage;
-
+	FGameplayTag Damage_Fire;
+	FGameplayTag Damage_Lightning;
+	FGameplayTag Damage_Arcane;
+	FGameplayTag Damage_Physical;
+	
+	FGameplayTag Attributes_Resistance_Fire;
+	FGameplayTag Attributes_Resistance_Lightning;
+	FGameplayTag Attributes_Resistance_Arcane;
+	FGameplayTag Attributes_Resistance_Physical;
+	
 	FGameplayTag Effects_HitReact;
+	
+	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
 	
 private:
 	static FAuraGameplayTags GameplayTags;

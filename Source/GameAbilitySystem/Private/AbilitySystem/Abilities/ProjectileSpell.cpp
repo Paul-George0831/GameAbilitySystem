@@ -2,7 +2,7 @@
 
 
 #include "AbilitySystem/Abilities/ProjectileSpell.h"
-
+#include "AbilitySystem/Abilities/AuraDamageGameplayAbility.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "AuraGameplayTags.h"
@@ -36,10 +36,13 @@ void UProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation)
 	FHitResult HitResult;
 	HitResult.Location = ProjectileTargetLocation;
 	ContextHandle.AddHitResult(HitResult);
-	const FGameplayEffectSpecHandle ProjectileEffectSpecHandle = SourceASC->MakeOutgoingSpec(ProjectileEffectClass, GetAbilityLevel(), ContextHandle);
+	const FGameplayEffectSpecHandle ProjectileEffectSpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), ContextHandle);
 	
-	const float ScaledDamage = Damage.GetValueAtLevel(1.f);
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(ProjectileEffectSpecHandle, FAuraGameplayTags::Get().Damage, ScaledDamage);
+	for (auto& Pair : DamageTypes)
+	{
+		const float ScaledDamage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(ProjectileEffectSpecHandle, Pair.Key, ScaledDamage);
+	}
 	Projectile->DamageEffectSpecHandle = ProjectileEffectSpecHandle;
 	Projectile->FinishSpawning(SpawnTransform);
 }

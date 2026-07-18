@@ -9,10 +9,10 @@ struct FAuraGameplayEffectContext : public FGameplayEffectContext
 
 public:
 
-	bool IsBlockHit() const { return bIsBlockHit; }
+	bool IsBlockHit() const { return bIsBlockedHit; }
 	bool IsCriticalHit() const { return bIsCriticalHit; }
 	
-	void SetIsBlockHit(bool InIsBlockHit) { bIsBlockHit = InIsBlockHit; }
+	void SetIsBlockHit(bool InIsBlockHit) { bIsBlockedHit = InIsBlockHit; }
 	void SetIsCriticalHit(bool InIsCriticalHit) { bIsCriticalHit = InIsCriticalHit; }
 	
 	virtual UScriptStruct* GetStruct() const
@@ -36,7 +36,7 @@ public:
 protected:
 
 	UPROPERTY()
-	bool bIsBlockHit = false;
+	bool bIsBlockedHit = false;
 	
 	UPROPERTY()
 	bool bIsCriticalHit = false;

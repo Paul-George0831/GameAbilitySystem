@@ -101,6 +101,34 @@ public:
 	 UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Vigor, Category="Primary Attributes")
 	 FGameplayAttributeData Vigor;
 	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FireResistance, Category = "Resistance Attributes")
+	FGameplayAttributeData FireResistance;
+	ATTRIBUTE_ACCESSORS(UGASAttributeSetBase, FireResistance);
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_LightningResistance, Category = "Resistance Attributes")
+	FGameplayAttributeData LightningResistance;
+	ATTRIBUTE_ACCESSORS(UGASAttributeSetBase, LightningResistance);
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ArcaneResistance, Category = "Resistance Attributes")
+	FGameplayAttributeData ArcaneResistance;
+	ATTRIBUTE_ACCESSORS(UGASAttributeSetBase, ArcaneResistance);
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalResistance, Category = "Resistance Attributes")
+	FGameplayAttributeData PhysicalResistance;
+	ATTRIBUTE_ACCESSORS(UGASAttributeSetBase, PhysicalResistance);
+	
+	UFUNCTION()
+	void OnRep_FireResistance(const FGameplayAttributeData& oldFireResistance) const;
+	
+	UFUNCTION()
+	void OnRep_LightningResistance(const FGameplayAttributeData& oldLightningResistance) const;
+	
+	UFUNCTION()
+	void OnRep_ArcaneResistance(const FGameplayAttributeData& oldArcaneResistance) const;
+	
+	UFUNCTION()
+	void OnRep_PhysicalResistance(const FGameplayAttributeData& oldPhysicalResistance) const;
+	
 	//
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Armor, Category="Secondary Attributes")
 	FGameplayAttributeData Armor;
@@ -177,7 +205,7 @@ public:
 
 	//在实际值真正改变前调用
 	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
-	void ShowDamageText(const FEffectProperties& Props, float LocalIncomingDamage) const;
+	void ShowFloatingText(const FEffectProperties& Props, float Damage, bool bBlockedHit, bool bCriticalHit) const;
 
 	//当GE生效的时候调用
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
