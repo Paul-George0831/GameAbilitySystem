@@ -64,9 +64,14 @@ void AAuraProjectile::BeginPlay()
  void AAuraProjectile::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                             UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
  {
- 	if (OtherActor == GetInstigator() || bHit)
+ 	if(HasAuthority() && DamageEffectSpecHandle.Data.IsValid() && DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor)
+ 	{
+ 		return ;
+ 	}
+ 	if (bHit)
+ 	{
  		return;
-
+ 	}
  	bHit = true;
 
 	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);

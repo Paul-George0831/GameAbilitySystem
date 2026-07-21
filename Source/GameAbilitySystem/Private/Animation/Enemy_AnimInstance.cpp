@@ -4,7 +4,7 @@
 
 void UEnemy_Animinstance::NativeInitializeAnimation()
 {
-	//需要调用父类的函数，否则会导致动画蓝图无法获取角色对象
+	//锟斤拷要锟斤拷锟矫革拷锟斤拷暮锟斤拷锟斤拷锟斤拷锟斤拷锟结导锟铰讹拷锟斤拷锟斤拷图锟睫凤拷锟斤拷取锟斤拷色锟斤拷锟斤拷
 	Super::NativeInitializeAnimation();
 	Enemy = Cast<AEnemy>(TryGetPawnOwner());
 	if (Enemy) {
@@ -17,5 +17,6 @@ void UEnemy_Animinstance::NativeUpdateAnimation(float DeltaSeconds)
 	Super::NativeUpdateAnimation(DeltaSeconds);
 	if (CharacterMovement) {
 		Speed = CharacterMovement->Velocity.Size2D();
+		CanMove = Speed > 0.f;
 	}
 }

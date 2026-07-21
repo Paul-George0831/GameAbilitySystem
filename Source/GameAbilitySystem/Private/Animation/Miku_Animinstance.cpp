@@ -19,6 +19,6 @@ void UMiku_Animinstance::NativeUpdateAnimation(float DeltaSeconds)
 	Super::NativeUpdateAnimation(DeltaSeconds);
 	if (CharacterMovement) {
 		Speed = CharacterMovement->Velocity.Size2D();
-		CanMove = Speed > 0.f;
+		CanMove = Speed > 0.f; 
 	}
 }

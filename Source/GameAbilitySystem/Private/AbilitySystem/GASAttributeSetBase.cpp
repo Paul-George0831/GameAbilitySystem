@@ -89,7 +89,7 @@ void UGASAttributeSetBase::ShowFloatingText(const FEffectProperties& Props, floa
 {
 	if (Props.SourceCharacter != Props.TargetCharacter)
 	{
-		if (ADefaultPlayerController* _PC = Cast<ADefaultPlayerController>(UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0)))
+		if (ADefaultPlayerController* _PC = Cast<ADefaultPlayerController>(Props.SourceCharacter->Controller))
 		{
 			_PC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
 		}

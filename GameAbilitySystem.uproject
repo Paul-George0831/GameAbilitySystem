@@ -11,7 +11,8 @@
 			"AdditionalDependencies": [
 				"Engine",
 				"UMG",
-				"GameplayAbilities"
+				"GameplayAbilities",
+				"AIModule"
 			]
 		}
 	],
@@ -36,9 +37,9 @@
 			],
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/362651520df94e4fa65492dbcba44ae2"
 		},
-		{
+		{	
 			"Name": "RiderSourceCodeAccess",
-			"Enabled": false
+			"Enabled": true
 		}
 	]
 }
